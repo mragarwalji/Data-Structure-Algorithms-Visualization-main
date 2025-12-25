@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0" />
+    <title>Linear Search Visualization</title>
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --royal-purple: #4B0082;
+            --royal-dark-purple: #2E0854;
+            --royal-blue: #0A2463;
+            --royal-gold: #D4AF37;
+            --royal-light-gold: #F0E68C;
+            --royal-silver: #C0C0C0;
+            --royal-dark: #1A1A2E;
+            --royal-light: #F5F5F5;
+            --royal-gradient: linear-gradient(135deg, #4B0082 0%, #0A2463 50%, #1A1A2E 100%);
+            --gold-gradient: linear-gradient(45deg, #D4AF37 0%, #F0E68C 50%, #D4AF37 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--royal-dark);
+            color: var(--royal-silver);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23d4af37' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+
+        /* Header Styling */
+        .header {
+            font-family: 'Cinzel', serif;
+            font-size: 3.5rem;
+            text-align: center;
+            margin-bottom: 30px;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+            padding-bottom: 15px;
+            letter-spacing: 2px;
+            margin-top: 20px;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 4px;
+            background: var(--gold-gradient);
+            border-radius: 2px;
+        }
+
+        /* Array Container */
+        #array {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding: 30px;
+            background: rgba(26, 26, 46, 0.8);
+            border-radius: 20px;
+            border: 3px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+            max-width: 95%;
+            margin: 20px auto;
+            min-height: 150px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        #array::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: var(--gold-gradient);
+            border-radius: 22px;
+            z-index: -1;
+        }
+
+        /* Array Elements */
+        .element {
+            width: 80px;
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: var(--royal-gradient);
+            color: var(--royal-light-gold);
+            border-radius: 12px;
+            border: 2px solid var(--royal-gold);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .element::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.7s;
+        }
+
+        .element:hover::before {
+            left: 100%;
+        }
+
+        .element-index {
+            position: absolute;
+            top: -25px;
+            font-size: 1rem;
+            color: var(--royal-silver);
+            font-weight: normal;
+            background: rgba(26, 26, 46, 0.8);
+            padding: 2px 8px;
+            border-radius: 10px;
+            border: 1px solid var(--royal-gold);
+        }
+
+        /* Visited element styling */
+        .element.visited {
+            background: linear-gradient(135deg, #0A2463 0%, #4B0082 100%);
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(10, 36, 99, 0.7);
+            border-color: #4B9CD3;
+        }
+
+        /* Found element styling */
+        .element.found {
+            background: linear-gradient(135deg, #228B22 0%, #32CD32 100%);
+            transform: scale(1.1);
+            box-shadow: 0 0 25px rgba(34, 139, 34, 0.8);
+            border-color: #90EE90;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1.1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1.1); }
+        }
+
+        /* Current element being checked */
+        .element.current {
+            background: linear-gradient(135deg, #D4AF37 0%, #FFD700 100%);
+            color: var(--royal-dark);
+            transform: scale(1.08);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.7);
+            border-color: #FFD700;
+        }
+
+        /* Control Panel */
+        .control-panel {
+            background: rgba(26, 26, 46, 0.9);
+            padding: 30px;
+            border-radius: 20px;
+            border: 3px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+            max-width: 800px;
+            width: 95%;
+            margin: 20px auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .control-panel::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: var(--gold-gradient);
+            border-radius: 22px;
+            z-index: -1;
+        }
+
+        /* Button Container */
+        .button-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        /* Button Styling */
+        .btn {
+            background: var(--gold-gradient);
+            color: var(--royal-dark);
+            border: none;
+            padding: 16px 35px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Cinzel', serif;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+            min-width: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s;
+            z-index: -1;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(212, 175, 55, 0.5);
+        }
+
+        .btn:active {
+            transform: translateY(-2px);
+        }
+
+        .btn-generate {
+            background: linear-gradient(45deg, #4B0082 0%, #0A2463 100%);
+            color: var(--royal-light-gold);
+        }
+
+        .btn-search {
+            background: linear-gradient(45deg, #228B22 0%, #32CD32 100%);
+            color: white;
+        }
+
+        /* Input Styling */
+        .input-container {
+            margin: 25px 0;
+        }
+
+        label {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            color: var(--royal-light-gold);
+            display: block;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        #searchInput {
+            width: 250px;
+            padding: 18px;
+            font-size: 1.3rem;
+            background: rgba(26, 26, 46, 0.8);
+            border: 2px solid var(--royal-gold);
+            border-radius: 15px;
+            color: var(--royal-light-gold);
+            text-align: center;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        #searchInput:focus {
+            border-color: var(--royal-light-gold);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+            transform: translateY(-2px);
+        }
+
+        /* Result Container */
+        .result-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 30px;
+            width: 100%;
+        }
+
+        .result-box {
+            background: rgba(26, 26, 46, 0.8);
+            padding: 25px;
+            border-radius: 15px;
+            border: 2px solid var(--royal-gold);
+            min-width: 300px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            flex: 1;
+        }
+
+        .result-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            color: var(--royal-gold);
+            margin-bottom: 15px;
+            text-align: center;
+            border-bottom: 2px solid var(--royal-gold);
+            padding-bottom: 10px;
+        }
+
+        .result-content {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: var(--royal-silver);
+            text-align: center;
+        }
+
+        .complexity-box {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .complexity-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 10px;
+            border-left: 4px solid var(--royal-gold);
+        }
+
+        .complexity-label {
+            font-weight: bold;
+            color: var(--royal-light-gold);
+        }
+
+        .complexity-value {
+            color: var(--royal-silver);
+        }
+
+        #text {
+            font-size: 1.4rem;
+            font-weight: 600;
+            padding: 20px;
+            border-radius: 15px;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display', serif;
+            transition: all 0.3s ease;
+            background: rgba(26, 26, 46, 0.7);
+            border: 2px solid transparent;
+        }
+
+        #text.found {
+            color: #32CD32;
+            border-color: #32CD32;
+            background: rgba(50, 205, 50, 0.1);
+            animation: textPulse 2s infinite;
+        }
+
+        #text.not-found {
+            color: #FF6B6B;
+            border-color: #FF6B6B;
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        #text.searching {
+            color: var(--royal-light-gold);
+            border-color: var(--royal-light-gold);
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        @keyframes textPulse {
+            0% { box-shadow: 0 0 10px rgba(50, 205, 50, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(50, 205, 50, 0.5); }
+            100% { box-shadow: 0 0 10px rgba(50, 205, 50, 0.3); }
+        }
+
+        /* Legend */
+        .legend {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 25px;
+            margin: 30px 0;
+            padding: 25px;
+            background: rgba(26, 26, 46, 0.7);
+            border-radius: 15px;
+            max-width: 900px;
+            width: 95%;
+            border: 2px solid var(--royal-gold);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .legend-color {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .legend-text {
+            color: var(--royal-silver);
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        /* Back Button */
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: var(--gold-gradient);
+            color: var(--royal-dark);
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4);
+            z-index: 1000;
+            text-decoration: none;
+        }
+
+        .back-button:hover {
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.6);
+        }
+
+        /* Statistics */
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            background: rgba(26, 26, 46, 0.8);
+            padding: 15px 25px;
+            border-radius: 15px;
+            border: 2px solid var(--royal-gold);
+            text-align: center;
+            min-width: 180px;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: var(--royal-silver);
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--royal-light-gold);
+            font-family: 'Cinzel', serif;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .header {
+                font-size: 2.8rem;
+            }
+            
+            .element {
+                width: 70px;
+                height: 70px;
+                font-size: 1.6rem;
+            }
+            
+            .btn {
+                min-width: 180px;
+                padding: 14px 25px;
+            }
+            
+            .result-box {
+                min-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                font-size: 2.2rem;
+                margin-top: 70px;
+            }
+            
+            .element {
+                width: 60px;
+                height: 60px;
+                font-size: 1.4rem;
+            }
+            
+            .element-index {
+                font-size: 0.9rem;
+                top: -22px;
+            }
+            
+            #array {
+                padding: 20px;
+                gap: 12px;
+            }
+            
+            .control-panel {
+                padding: 20px;
+            }
+            
+            .button-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .legend {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+            
+            .stats {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .stat-item {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                font-size: 1.8rem;
+            }
+            
+            .element {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+            
+            .element-index {
+                font-size: 0.8rem;
+                top: -20px;
+            }
+            
+            #searchInput {
+                width: 200px;
+                padding: 15px;
+                font-size: 1.1rem;
+            }
+            
+            .btn {
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+            
+            #text {
+                font-size: 1.1rem;
+                padding: 15px;
+            }
+            
+            .result-title {
+                font-size: 1.3rem;
+            }
+            
+            .result-content {
+                font-size: 1rem;
+            }
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--royal-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gold-gradient);
+            border-radius: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(45deg, #F0E68C 0%, #D4AF37 100%);
+        }
+
+        /* Array Size Control */
+        .array-control {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .array-size-label {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            color: var(--royal-light-gold);
+            margin-right: 15px;
+        }
+
+        .array-size-input {
+            width: 80px;
+            padding: 10px;
+            font-size: 1.1rem;
+            background: rgba(26, 26, 46, 0.8);
+            border: 2px solid var(--royal-gold);
+            border-radius: 10px;
+            color: var(--royal-light-gold);
+            text-align: center;
+            outline: none;
+        }
+
+        .array-info {
+            font-size: 1rem;
+            color: var(--royal-silver);
+            margin-top: 10px;
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Back Button -->
+    <a href="../index.html" class="back-button">
+        <i class="bi bi-arrow-left"></i>
+    </a>
+
+    <!-- Main Header -->
+    <p class="header">Linear Search Visualization</p>
+
+    <!-- Array Size Control -->
+    <div class="array-control">
+        <label class="array-size-label">Array Size:</label>
+        <input type="number" id="arraySize" class="array-size-input" value="15" min="5" max="25">
+        <p class="array-info">(Between 5 and 25 elements)</p>
+    </div>
+
+    <!-- Array Container -->
+    <div id="array"></div>
+
+    <!-- Statistics -->
+    <div class="stats">
+        <div class="stat-item">
+            <div class="stat-label">Array Size</div>
+            <div class="stat-value" id="arraySizeDisplay">15</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-label">Comparisons</div>
+            <div class="stat-value" id="comparisonCount">0</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-label">Time Taken</div>
+            <div class="stat-value" id="timeTaken">0ms</div>
+        </div>
+    </div>
+
+    <!-- Control Panel -->
+    <div class="control-panel">
+        <div class="button-container">
+            <button class="btn btn-generate" onclick="generateRandomArray()">
+                <i class="bi bi-shuffle"></i>
+                Generate Random Array
+            </button>
+            
+            <div class="input-container">
+                <label for="searchInput">
+                    <i class="bi bi-search"></i>
+                    Number to Search:
+                </label>
+                <input type="number" id="searchInput" placeholder="Enter a number" />
+            </div>
+            
+            <button class="btn btn-search" onclick="startLinearSearch()">
+                <i class="bi bi-play-fill"></i>
+                Start Linear Search
+            </button>
+        </div>
+
+        <!-- Search Result -->
+        <div id="text">Generate an array and enter a number to search</div>
+    </div>
+
+    <!-- Results Container -->
+    <div class="result-container">
+        <div class="result-box">
+            <div class="result-title">Search Result</div>
+            <div class="result-content" id="searchResult">
+                No search performed yet
+            </div>
+        </div>
+        
+        <div class="result-box">
+            <div class="result-title">Time Complexity</div>
+            <div class="result-content complexity-box">
+                <div class="complexity-item">
+                    <span class="complexity-label">Best Case:</span>
+                    <span class="complexity-value">O(1)</span>
+                </div>
+                <div class="complexity-item">
+                    <span class="complexity-label">Average Case:</span>
+                    <span class="complexity-value">O(n)</span>
+                </div>
+                <div class="complexity-item">
+                    <span class="complexity-label">Worst Case:</span>
+                    <span class="complexity-value">O(n)</span>
+                </div>
+                <div class="complexity-item">
+                    <span class="complexity-label">Space Complexity:</span>
+                    <span class="complexity-value">O(1)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Legend -->
+    <div class="legend">
+        <div class="legend-item">
+            <div class="legend-color" style="background: linear-gradient(135deg, #4B0082 0%, #0A2463 100%);"></div>
+            <div class="legend-text">Normal Element</div>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background: linear-gradient(135deg, #0A2463 0%, #4B0082 100%);"></div>
+            <div class="legend-text">Visited Element</div>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background: linear-gradient(135deg, #D4AF37 0%, #FFD700 100%);"></div>
+            <div class="legend-text">Current Element</div>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background: linear-gradient(135deg, #228B22 0%, #32CD32 100%);"></div>
+            <div class="legend-text">Found Element</div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentArray = [];
+        let arraySize = 15;
+        let isSearching = false;
+        let comparisons = 0;
+        let searchStartTime = 0;
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            generateRandomArray();
+            document.getElementById('arraySize').addEventListener('change', updateArraySize);
+            document.getElementById('searchInput').addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    startLinearSearch();
+                }
+            });
+        });
+
+        // Update array size
+        function updateArraySize() {
+            const sizeInput = document.getElementById('arraySize');
+            let newSize = parseInt(sizeInput.value);
+            
+            if (newSize < 5) newSize = 5;
+            if (newSize > 25) newSize = 25;
+            
+            sizeInput.value = newSize;
+            arraySize = newSize;
+            document.getElementById('arraySizeDisplay').textContent = newSize;
+            generateRandomArray();
+        }
+
+        // Generate random array
+        function generateRandomArray() {
+            if (isSearching) return;
+            
+            currentArray = [];
+            const arrayContainer = document.getElementById('array');
+            arrayContainer.innerHTML = '';
+            
+            // Generate random numbers between 1 and 100
+            for (let i = 0; i < arraySize; i++) {
+                currentArray.push(Math.floor(Math.random() * 100) + 1);
+            }
+            
+            // Display array elements
+            currentArray.forEach((value, index) => {
+                const element = document.createElement('div');
+                element.className = 'element';
+                element.id = 'elem' + index;
+                element.innerHTML = `
+                    <div class="element-index">Index: ${index}</div>
+                    ${value}
+                `;
+                arrayContainer.appendChild(element);
+            });
+            
+            // Reset statistics
+            resetStatistics();
+            
+            // Update result display
+            document.getElementById('searchResult').textContent = "New array generated. Enter a number to search.";
+            document.getElementById('text').textContent = "Array generated! Enter a number to search";
+            document.getElementById('text').className = "";
+            
+            // Clear input
+            document.getElementById('searchInput').value = "";
+        }
+
+        // Reset statistics
+        function resetStatistics() {
+            comparisons = 0;
+            document.getElementById('comparisonCount').textContent = "0";
+            document.getElementById('timeTaken').textContent = "0ms";
+        }
+
+        // Start linear search
+        function startLinearSearch() {
+            if (isSearching) {
+                alert("Please wait for the current search to complete!");
+                return;
+            }
+            
+            const searchValue = parseInt(document.getElementById('searchInput').value);
+            const textElement = document.getElementById('text');
+            
+            if (isNaN(searchValue)) {
+                textElement.textContent = "Please enter a valid number!";
+                textElement.className = "not-found";
+                return;
+            }
+            
+            if (currentArray.length === 0) {
+                textElement.textContent = "Please generate an array first!";
+                textElement.className = "not-found";
+                return;
+            }
+            
+            isSearching = true;
+            textElement.textContent = "Searching...";
+            textElement.className = "searching";
+            
+            // Reset statistics
+            resetStatistics();
+            searchStartTime = performance.now();
+            
+            // Reset all elements
+            for (let i = 0; i < currentArray.length; i++) {
+                const elem = document.getElementById('elem' + i);
+                elem.classList.remove('visited', 'found', 'current');
+            }
+            
+            // Start visual search
+            linearSearchVisual(searchValue);
+        }
+
+        // Linear search with visualization
+        function linearSearchVisual(searchValue) {
+            let index = 0;
+            let found = false;
+            
+            function searchStep() {
+                if (index >= currentArray.length) {
+                    // Search completed
+                    finishSearch(false, searchValue);
+                    return;
+                }
+                
+                // Highlight current element
+                const currentElem = document.getElementById('elem' + index);
+                const currentValue = currentArray[index];
+                
+                // Update comparison count
+                comparisons++;
+                document.getElementById('comparisonCount').textContent = comparisons;
+                
+                // Remove previous current class
+                document.querySelectorAll('.element.current').forEach(el => {
+                    el.classList.remove('current');
+                });
+                
+                currentElem.classList.add('current');
+                
+                // Check if found
+                if (currentValue === searchValue) {
+                    found = true;
+                    currentElem.classList.remove('current');
+                    currentElem.classList.add('found');
+                    finishSearch(true, searchValue, index);
+                    return;
+                }
+                
+                // Mark as visited and move to next
+                setTimeout(() => {
+                    currentElem.classList.remove('current');
+                    currentElem.classList.add('visited');
+                    index++;
+                    searchStep();
+                }, 800);
+            }
+            
+            // Start search
+            setTimeout(searchStep, 500);
+        }
+
+        // Finish search and show results
+        function finishSearch(found, searchValue, foundIndex = -1) {
+            isSearching = false;
+            
+            // Calculate time taken
+            const searchEndTime = performance.now();
+            const timeTaken = searchEndTime - searchStartTime;
+            document.getElementById('timeTaken').textContent = `${Math.round(timeTaken)}ms`;
+            
+            const textElement = document.getElementById('text');
+            const resultElement = document.getElementById('searchResult');
+            
+            if (found) {
+                textElement.textContent = `Element ${searchValue} found at index ${foundIndex}!`;
+                textElement.className = "found";
+                
+                resultElement.innerHTML = `
+                    <div style="margin-bottom: 10px;">
+                        <strong>Element Found!</strong>
+                    </div>
+                    <div>Value: <strong>${searchValue}</strong></div>
+                    <div>Index: <strong>${foundIndex}</strong></div>
+                    <div>Comparisons: <strong>${comparisons}</strong></div>
+                    <div>Time: <strong>${Math.round(timeTaken)}ms</strong></div>
+                    <div style="margin-top: 10px; font-size: 1.1rem; color: var(--royal-light-gold);">
+                        This is the <strong>${comparisons}${getOrdinalSuffix(comparisons)}</strong> element checked.
+                    </div>
+                `;
+            } else {
+                textElement.textContent = `Element ${searchValue} not found in the array!`;
+                textElement.className = "not-found";
+                
+                resultElement.innerHTML = `
+                    <div style="margin-bottom: 10px;">
+                        <strong>Element Not Found!</strong>
+                    </div>
+                    <div>Value: <strong>${searchValue}</strong></div>
+                    <div>Comparisons: <strong>${comparisons}</strong></div>
+                    <div>Time: <strong>${Math.round(timeTaken)}ms</strong></div>
+                    <div style="margin-top: 10px; font-size: 1.1rem; color: var(--royal-silver);">
+                        Searched through all <strong>${currentArray.length}</strong> elements.
+                    </div>
+                `;
+            }
+        }
+
+        // Helper function for ordinal suffixes
+        function getOrdinalSuffix(n) {
+            if (n % 100 >= 11 && n % 100 <= 13) return 'th';
+            switch (n % 10) {
+                case 1: return 'st';
+                case 2: return 'nd';
+                case 3: return 'rd';
+                default: return 'th';
+            }
+        }
+    </script>
+</body>
+</html>

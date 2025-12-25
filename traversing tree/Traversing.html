@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tree Traversal Visualization</title>
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="traverse.css">
+</head>
+
+<body>
+    <!-- Back Button -->
+    <a href="../index.html" class="back-button">
+        <i class="bi bi-arrow-left"></i>
+    </a>
+
+    <div class="main-container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Tree Traversal Visualization</h1>
+            <h2>Explore different tree traversal algorithms with interactive visualizations</h2>
+        </div>
+
+       
+
+        <!-- Instructions -->
+        <div class="instructions">
+            <h3>How to Use</h3>
+            <p>1. First, create a tree by clicking "Create Tree" button</p>
+            <p>2. Choose to generate a random tree or input your own values</p>
+            <p>3. Select a traversal algorithm to visualize the tree traversal</p>
+            <p>4. Watch the animation as nodes are visited in order</p>
+        </div>
+
+        <!-- Tree Creation Section -->
+        <div class="tree-creation">
+            <h1>Tree Creation</h1>
+            
+            <button id="createTreeButton" class="btn" onclick="showOptions()">
+                <i class="bi bi-tree"></i>
+                Create Tree
+            </button>
+
+            <div id="optionButtons" style="display: none;">
+                <button id="randomArrayButton" class="option-btn" onclick="createRandomArray()">
+                    <i class="bi bi-shuffle"></i>
+                    Generate Random Tree
+                </button>
+                <button id="insertValuesButton" class="option-btn" onclick="showValuesInput()">
+                    <i class="bi bi-input-cursor"></i>
+                    Insert Custom Values
+                </button>
+            </div>
+
+            <div id="inputContainer" style="display: none;">
+                <input type="text" id="valuesInput" placeholder="Enter values separated by commas (e.g., 10,5,15,3,7,12,18)">
+                <div id="inputButtonsContainer">
+                    <button id="performOperationButton" class="option-btn" onclick="insertValuesManually()">
+                        <i class="bi bi-check-circle"></i>
+                        Create Tree
+                    </button>
+                    <button id="randomArrayButton1" class="option-btn" onclick="createRandomArray()" style="display: none;">
+                        <i class="bi bi-shuffle"></i>
+                        Generate Random Tree
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Result Display -->
+        <div id="result">Create a tree to begin visualization</div>
+
+         <!-- Navigation Bar -->
+        <div class="navbar">
+            <h2>Traversing Tree Operations</h2>
+            <div class="nav-buttons">
+                <button id="inorderButton" class="btn">
+                    <i class="bi bi-arrow-left-right"></i>
+                    Inorder Traversal
+                </button>
+                <button id="preOrderButton" class="btn">
+                    <i class="bi bi-arrow-up"></i>
+                    Pre-order Traversal
+                </button>
+                <button id="postOrderButton" class="btn">
+                    <i class="bi bi-arrow-down"></i>
+                    Post-order Traversal
+                </button>
+                <button id="labelOrderButton" class="btn">
+                    <i class="bi bi-layers"></i>
+                    Level-order Traversal
+                </button>
+            </div>
+        </div>
+
+        
+
+        <!-- Tree Container -->
+        <div id="treeContainer">
+            <div class="traversal-heading" id="traversalType">No traversal selected</div>
+            <div id="arrayBoxContainer"></div>
+            <div id="treeDisplay">Tree will be displayed here</div>
+        </div>
+    </div>
+    <!-- Traversal Info -->
+        <!-- <div class="traversal-info">
+            <h3>Traversal Algorithms</h3>
+            <div class="info-item">
+                <div class="info-icon">I</div>
+                <div class="info-text"><strong>Inorder:</strong> Left → Root → Right (Gives sorted order for BST)</div>
+            </div>
+            <div class="info-item">
+                <div class="info-icon">P</div>
+                <div class="info-text"><strong>Pre-order:</strong> Root → Left → Right (Used to create a copy of tree)</div>
+            </div>
+            <div class="info-item">
+                <div class="info-icon">P</div>
+                <div class="info-text"><strong>Post-order:</strong> Left → Right → Root (Used to delete the tree)</div>
+            </div>
+            <div class="info-item">
+                <div class="info-icon">L</div>
+                <div class="info-text"><strong>Level-order:</strong> Breadth-first level by level (Used for hierarchical data)</div>
+            </div>
+        </div> -->
+
+    <script src="traverse.js"></script>
+</body>
+</html>
