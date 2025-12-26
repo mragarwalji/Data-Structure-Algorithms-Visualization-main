@@ -1,120 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <title>Linked List Visualizer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
 
-		<link rel="icon" href="img/pointer.png"/>
+<body>
 
-		<link rel="stylesheet" href="vendor/css/fontawesome.css" />
+    <!-- Settings Menu -->
+    <div id="settings">
+        <div class="menu-header">
+            <div id="close-menu">
+                <i class="fas fa-times"></i>
+            </div>
+            <div><h2>Settings</h2></div>
+        </div>
 
+        <div class="settings-container">
+            <div>
+                <p>Node Animation Speed: </p>
+                <input type="number" id="node-speed" placeholder="500" value="500" min="100" max="3000" />
+            </div>
 
-		<link rel="stylesheet" href="css/style.css" />
-		<link rel="stylesheet" href="css/responisve.css" />
-		<title>Linked List Visualization</title>
-	</head>
-	
-	<body>
+            <div>
+                <p>Pointer Animation Speed: </p>
+                <input type="number" id="pointer-speed" placeholder="300" value="300" min="100" max="3000" />
+            </div>
 
-		<div id="settings">
-			<div class="menu-header">
-				<div id="close-menu">
-					<i class="fas fa-times"></i>
-				</div>
-				<div><h2>Settings</h2></div>
-			</div>
+            <div>
+                <p>Delete Animation Speed: </p>
+                <input type="number" id="delete-speed" placeholder="500" value="500" min="100" max="3000" />
+            </div>
 
-			<div class="settings-container">
-					<div>
-						<p>Node Animation Speed: </p>
-						<input type="number" placeholder="Miliseconds" />
-					</div>
-		
-					<div>
-						<p>Pointer Animation Speed: </p>
-						<input type="number" placeholder="Miliseconds" />
-					</div>
+            <div class="error-message">
+                <p id="settings-error"></p>
+            </div>
 
-					<div>
-						<p>Delete Animation Speed: </p>
-						<input type="number" placeholder="Miliseconds" />
-					</div>
+            <div class="success">
+                <p id="settings-success"></p>
+            </div>
 
-					<div class="error-message">
-						<p id="settings-error"></p>
-					</div>
+            <button id="save-settings">Save Settings</button>
+        </div>
+    </div>
 
-					<div class="success">
-						<p id="succes"></p>
-					</div>
-		
-					<button id="save-settings">Save</button>
-			</div>			
-		</div>
+    <!-- Settings Button -->
+    <button id="settings-btn">
+        <i class="fas fa-cog"></i> Settings
+    </button>
 
-		<header>
-			<div class="header-container">
-				
-				<div>
-					<h1>Linked <span>List</span> Visualization</h1>
-				</div>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div>
+                <h1><span>Linked List</span> Visualizer</h1>
+                <p class="subtitle">Visualize nodes and pointers</p>
+            </div>
+        </div>
+        <div class="gradient-border"></div>
+    </header>
 
-			</div>
-			<div class="gradient-border"></div>
-		</header>
+    <!-- Main Content -->
+    <main>
+        <!-- Linked List Visualization Area -->
+        <section class="list" id="list">
+            <!-- Nodes will be dynamically inserted here -->
+            <div class="empty-message" id="empty-message">
+                <i class="fas fa-layer-group fa-3x"></i>
+                <h3>Linked List is Empty</h3>
+                <p>Add nodes to start visualizing your linked list</p>
+            </div>
+        </section>
 
-		<main>
-			<section class="list" id="list"></section>
+        <!-- Error Messages -->
+        <section class="errors">
+            <div class="error-message" id="error">
+                <p id="error-text"></p>
+            </div>
+        </section>
 
-			<section class="errors">
-				<div class="error-message">
-					<p id="error"></p>
-				</div>
-			</section>
+        <!-- Operations Panel -->
+        <section class="operations">
+            <div class="wrapper">
+                <div>
+                    <button class="button" id="set-btn">
+                        <i class="fas fa-edit"></i> Update Node
+                    </button>
+					<br>
+                    <input type="number" id="set-index" placeholder="Index" />
+                    <input type="number" id="set-data" placeholder="New Data" />
+                </div>
 
-			<section class="operations">
-				<div class="wrapper">
-					<div>
-						<button class="button" id="set-btn">Set</button>
-						<input type="number" placeholder="Index" />
-						<input type="number" placeholder="Data" />
-					</div>
+                <div>
+                    <button class="button" id="insert-btn">
+                        <i class="fas fa-arrow-circle-down"></i> Insert At
+                    </button>
+					<br>
+                    <input type="number" id="insert-index" placeholder="Index" />
+                    <input type="number" id="insert-data" placeholder="Data" />
+                </div>
 
-					<div>
-						<button class="button" id="insert-btn">Insert</button>
-						<input type="number" placeholder="Index" />
-						<input type="number" placeholder="Data" />
-					</div>
+                <div>
+                    <button class="button" id="add-btn">
+                        <i class="fas fa-plus-circle"></i> Add Node
+                    </button>
+					<br>
+                    <input type="number" id="add-data" placeholder="Data" />
+                </div>
 
-					<div>
-						<button class="button" id="add-btn">Add</button>
-						<input type="number" placeholder="Data" />
-					</div>
+                <div>
+                    <div class="remove">
+                        <button class="button" id="remove-btn">
+                            <i class="fas fa-minus-circle"></i> Remove
+                        </button>
+                        <button class="button" id="remove-settings">
+                            <i class="fas fa-cog"></i>
+                        </button>
+                    </div>
 
-					<div>
-						<div class="remove">
-							<button class="button" id="remove-btn">Remove</button>
-							<button class="button" id="remove-settings">
-								<i class="fas fa-cog"></i>
-							</button>
-						</div>
+                    <button class="remove-option" id="remove-index-btn">
+                        Remove by Index
+                    </button>
+                    <button class="remove-option" id="remove-data-btn">
+                        Remove by Data
+                    </button>
+					<br>
 
-						<button class="remove-option" id="remove-index-btn">
-							Index
-						</button>
-						<button class="remove-option" id="remove-data-btn">
-							Data
-						</button>
+                    <input type="number" id="remove-index" placeholder="Index" />
+                    <input type="number" id="remove-data" placeholder="Data" />
+                </div>
+            </div>
+        </section>
+    </main>
 
-						<input type="number" placeholder="Index" />
-						<input type="number" placeholder="Data" />
-					</div>
-				</div>
-			</section>
-		</main>
+  
 
-		<script src="js/LinkedList.js"></script>
-		<script src="js/main.js"></script>
-	</body>
+   <script src="script.js"></script>
+</body>
 </html>
