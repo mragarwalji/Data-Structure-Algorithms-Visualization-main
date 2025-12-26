@@ -1,298 +1,788 @@
-body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    text-align: center;
-    background-color: #f0f0f0;
-}
+:root {
+            --royal-purple: #4B0082;
+            --royal-dark-purple: #2E0854;
+            --royal-blue: #0A2463;
+            --royal-gold: #D4AF37;
+            --royal-light-gold: #F0E68C;
+            --royal-silver: #C0C0C0;
+            --royal-dark: #1A1A2E;
+            --royal-light: #F5F5F5;
+            --royal-gradient: linear-gradient(135deg, #4B0082 0%, #0A2463 50%, #1A1A2E 100%);
+            --gold-gradient: linear-gradient(45deg, #D4AF37 0%, #F0E68C 50%, #D4AF37 100%);
+        }
 
-h1 {
-    margin-bottom: 20px;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-#createTreeButton {
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-}
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--royal-dark);
+            color: var(--royal-silver);
+            min-height: 100vh;
+            padding: 20px;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23d4af37' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
 
-#dropdownContainer {
-    display: none;
-    margin-top: 20px;
-}
+        /* Back Button */
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: var(--gold-gradient);
+            color: var(--royal-dark);
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4);
+            z-index: 1000;
+            text-decoration: none;
+        }
 
-#operationDropdown {
-    font-size: 16px;
-    padding: 5px;
-    margin-right: 10px;
-}
+        .back-button:hover {
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.6);
+        }
 
-#inputContainer {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 20px;
-}
+        /* Main Container */
+        .main-container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            overflow-x: hidden;
+        }
 
-#valuesInput {
-    font-size: 16px;
-    padding: 5px;
-    width: 100%;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-    flex-grow: 1;
-}
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-top: 40px;
+        }
 
+        .header h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 3rem;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+        }
 
+        .header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--royal-silver);
+            font-weight: 300;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
 
-#treeDisplay {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    margin-top: 40px;
-}
+        /* Navigation Bar */
+        .navbar {
+            background: rgba(26, 26, 46, 0.9);
+            padding: 25px 30px;
+            border-radius: 20px;
+            border: 3px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin-bottom: 40px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
 
+        .navbar::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: var(--gold-gradient);
+            border-radius: 22px;
+            z-index: -1;
+        }
 
-.node {
-    margin: 5px;
-    position: absolute;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    /* background-color: #2196f3; */
-    background-color: #a6f321;
-    border-radius: 50%;
-    font-size: 18px;
-    font-weight: bold;
-    color: white;
-    transition: background-color 0.3s ease;
-    z-index: 1;
-    border: 2px solid red;
-}
+        .navbar h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 2.2rem;
+            color: var(--royal-light-gold);
+            text-align: center;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+        }
 
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
 
+        /* Button Styling */
+        .btn {
+            background: var(--gold-gradient);
+            color: var(--royal-dark);
+            border: none;
+            padding: 14px 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Cinzel', serif;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+            min-width: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
 
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s;
+            z-index: -1;
+        }
 
+        .btn:hover::before {
+            left: 100%;
+        }
 
-#randomArrayButton,
-#insertValuesButton {
-    display: none;
-}
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(212, 175, 55, 0.5);
+        }
 
+        .btn:active {
+            transform: translateY(-2px);
+        }
 
-/* ... your existing styles ... */
+        /* Specific Button Colors */
+        #insertButton {
+            background: linear-gradient(45deg, #228B22 0%, #32CD32 100%);
+            color: white;
+        }
 
-#optionButtons {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
-}
+        #deleteButton {
+            background: linear-gradient(45deg, #FF6B6B 0%, #FF8E53 100%);
+            color: white;
+        }
 
-#randomArrayButton,
-#insertValuesButton {
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    opacity: 0;
-    margin: 10px;
-    background-color: #ff9800;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-}
+        #searchButton {
+            background: linear-gradient(45deg, #4B0082 0%, #0A2463 100%);
+            color: var(--royal-light-gold);
+        }
 
-/* Center the text within the buttons */
-#randomArrayButton,
-#insertValuesButton {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+        #minButton {
+            background: linear-gradient(45deg, #D4AF37 0%, #FFD700 100%);
+            color: var(--royal-dark);
+        }
 
-/* Hover effect for buttons */
-#randomArrayButton:hover,
-#insertValuesButton:hover {
-    background-color: #ffcc80;
-}
+        #maxButton {
+            background: linear-gradient(45deg, #556270 0%, #4ECDC4 100%);
+            color: white;
+        }
 
+        #heightButton {
+            background: linear-gradient(45deg, #8A2BE2 0%, #9370DB 100%);
+            color: white;
+        }
 
+        /* Tree Creation Section */
+        .tree-creation {
+            background: rgba(26, 26, 46, 0.8);
+            padding: 30px;
+            border-radius: 20px;
+            border: 3px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin-bottom: 40px;
+            text-align: center;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
 
+        .tree-creation::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: var(--gold-gradient);
+            border-radius: 22px;
+            z-index: -1;
+        }
 
+        .tree-creation h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 2.5rem;
+            color: var(--royal-light-gold);
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+        }
 
-#valuesInput::placeholder {
-    color: #999;
-}
+        #createTreeButton {
+            background: linear-gradient(45deg, #4B0082 0%, #0A2463 100%);
+            color: var(--royal-light-gold);
+            margin: 0 auto 30px;
+            display: block;
+            font-size: 1.4rem;
+            padding: 18px 45px;
+            min-width: 220px;
+        }
 
-#performOperationButton {
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    background-color: #ff5722;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-}
+        /* Option Buttons */
+        #optionButtons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
 
-#randomArrayButton1{
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    background-color: #ff5722;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-}
+        .option-btn {
+            background: linear-gradient(45deg, #4B0082 0%, #0A2463 100%);
+            color: var(--royal-light-gold);
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Playfair Display', serif;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            box-shadow: 0 5px 15px rgba(75, 0, 130, 0.3);
+            min-width: 200px;
+        }
 
-#performOperationButton:hover {
-    background-color: #ff7043;
-}
+        .option-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(75, 0, 130, 0.5);
+        }
 
+        /* Input Container */
+        #inputContainer {
+            background: rgba(26, 26, 46, 0.9);
+            padding: 25px;
+            border-radius: 15px;
+            border: 2px solid var(--royal-gold);
+            margin-top: 20px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
 
-/* Your existing styles */
+        #valuesInput {
+            width: 100%;
+            padding: 18px;
+            font-size: 1.2rem;
+            background: rgba(26, 26, 46, 0.8);
+            border: 2px solid var(--royal-gold);
+            border-radius: 12px;
+            color: var(--royal-light-gold);
+            text-align: center;
+            margin-bottom: 20px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
 
+        #valuesInput:focus {
+            border-color: var(--royal-light-gold);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+            transform: translateY(-2px);
+        }
 
-.navbar {
-    background-color: #333;
-    /* overflow: hidden; */
-    color: white;
-    text-align: center;
-    height: 95px;
-    /* padding: 5px; */
-}
+        #inputButtonsContainer {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
 
-.navbar h2 {
-    margin: 0;
-    padding: 8px;
-}
+        /* Complexity Section */
+        .complexity-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 30px auto;
+            max-width: 1200px;
+        }
 
-.nav-buttons {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* border: 1px solid green; */
-    height: 50px;
-}
+        .complexity-box {
+            background: rgba(26, 26, 46, 0.8);
+            padding: 25px;
+            border-radius: 15px;
+            border: 2px solid var(--royal-gold);
+            flex: 1;
+            min-width: 300px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
 
-.nav-buttons button {
-    /* background-color: #555; */
-    background-color: #333;
+        .complexity-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+        }
 
-    border: none;
-    border: 1px solid #333;
+        .complexity-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.4rem;
+            color: var(--royal-light-gold);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--royal-gold);
+        }
 
-    color: #556B2F;
-    font-weight: bold;
-    padding: 8px 20px;
-    margin: 10px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-}
+        .complexity-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--royal-gold);
+            margin: 10px 0;
+        }
 
-.nav-buttons button:hover {
-    /* background-color: #777; */
-    border: 1px solid #556B2F;
-    /* font-size: 14px; */
+        .complexity-desc {
+            font-size: 1rem;
+            color: var(--royal-silver);
+            line-height: 1.5;
+        }
 
-}
+        /* Popup Styling */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(26, 26, 46, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            border: 3px solid var(--royal-gold);
+            z-index: 1001;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            min-width: 400px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
 
+        .popup h3 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            color: var(--royal-light-gold);
+            margin-bottom: 25px;
+        }
 
+        .popup input {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2rem;
+            background: rgba(26, 26, 46, 0.8);
+            border: 2px solid var(--royal-gold);
+            border-radius: 10px;
+            color: var(--royal-light-gold);
+            text-align: center;
+            margin-bottom: 25px;
+            outline: none;
+        }
 
+        .popup button {
+            background: var(--gold-gradient);
+            color: var(--royal-dark);
+            border: none;
+            padding: 15px 35px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Cinzel', serif;
+            letter-spacing: 1px;
+            width: 100%;
+        }
 
+        .popup button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.5);
+        }
 
-.popup {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background-color: white;
-    border: 1px solid #ccc;
-    padding: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-    display: none;
-    z-index: 1;
-}
+        /* Overlay for popup */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
 
-.popup h3 {
-    margin-top: 0;
-}
+        /* Result Display */
+        #result {
+            background: rgba(26, 26, 46, 0.9);
+            padding: 25px;
+            border-radius: 15px;
+            border: 2px solid var(--royal-gold);
+            margin: 30px auto;
+            max-width: 800px;
+            text-align: center;
+            font-size: 1.3rem;
+            color: var(--royal-silver);
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-.popup input {
-    width: 100%;
-    padding: 5px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
+        /* Tree Container - FIXED: Proper tree display */
+        #treeContainer {
+            background: rgba(26, 26, 46, 0.8);
+            padding: 30px;
+            border-radius: 20px;
+            border: 3px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin-top: 40px;
+            min-height: 500px;
+            max-width: 100%;
+            overflow: auto;
+            margin-left: auto;
+            margin-right: auto;
+        }
 
-.popup button {
-    padding: 5px 10px;
-    font-size: 14px;
-    cursor: pointer;
-    background-color: #2196f3;
-    color: white;
-    border: none;
-    border-radius: 5px;
-}
+        #treeContainer::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: var(--gold-gradient);
+            border-radius: 22px;
+            z-index: -1;
+        }
 
-.highlight {
-    background-color: black;
-}
+        /* Tree Display Container - FIXED: Non-overlapping nodes */
+        .tree-display-container {
+            width: 100%;
+            min-height: 600px;
+            position: relative;
+            margin: 0 auto;
+            overflow: visible;
+        }
 
-.node-connector {
-    position: absolute;
-    /* width: 2px; */
-    background-color: #2196f3;
-    margin: 33px -29px;
-    /* z-index: 2; */
-    opacity: .4;
-    border: .5px solid red;
-    /* margin: 5px; */
-    /* Ensure the connectors are fully visible */
-    /* visibility: visible; */
-    /* Ensure the connectors are visible */
-}
+        #treeDisplay {
+            position: relative;
+            min-height: 600px;
+            width: 100%;
+        }
 
-#treeContainer {
+        /* Tree Node Styling - FIXED: Non-overlapping */
+        .tree-node {
+            width: 65px;
+            height: 65px;
+            background: var(--royal-gradient);
+            color: var(--royal-light-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border: 3px solid var(--royal-gold);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: absolute;
+            transition: all 0.3s ease;
+            z-index: 10;
+            cursor: pointer;
+            text-align: center;
+        }
 
-    position: relative;
+        .tree-node:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.7);
+        }
 
-    /* Adjust the height as needed */
-    height: 75vh;
-    /* margin-bottom: 20px; */
-    border: 1px solid #ccc;
-    background-color: white;
-    margin-top: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-}
+        .tree-node.inserted {
+            background: linear-gradient(135deg, #228B22 0%, #32CD32 100%);
+            animation: pulse 1s;
+        }
 
-#TimeComplexitywc,
-#TimeComplexitybc,
-#SpaceComplexity {
-    display: block;
-    font-size: 0.9rem;
-    margin-block-start: 0.83em;
-    margin-block-end: 0.83em;
-    margin-inline-start: 0px;
-    margin-inline-end: 0px;
-    font-weight: bold;
-    unicode-bidi: isolate;
-    color: #ff003d;
-    background-color: #333;
-    height: auto;
-    width: 350px;
+        .tree-node.deleted {
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+            animation: shake 0.5s;
+        }
 
-}
+        .tree-node.found {
+            background: linear-gradient(135deg, #D4AF37 0%, #FFD700 100%);
+            color: var(--royal-dark);
+            animation: glow 2s infinite;
+        }
+
+        .tree-node.current {
+            background: linear-gradient(135deg, #4B0082 0%, #0A2463 100%);
+            color: white;
+        }
+
+        .tree-node.min {
+            background: linear-gradient(135deg, #D4AF37 0%, #FFD700 100%);
+            color: var(--royal-dark);
+            animation: highlight 2s infinite;
+        }
+
+        .tree-node.max {
+            background: linear-gradient(135deg, #556270 0%, #4ECDC4 100%);
+            color: white;
+            animation: highlight 2s infinite;
+        }
+
+        .tree-node.root {
+            border-width: 4px;
+            border-color: var(--royal-light-gold);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.8); }
+            50% { box-shadow: 0 0 30px rgba(212, 175, 55, 1); }
+        }
+
+        @keyframes highlight {
+            0%, 100% { transform: scale(1.1); }
+            50% { transform: scale(1.15); }
+        }
+
+        /* Tree Connectors - FIXED: Proper positioning */
+        .tree-connector {
+            position: absolute;
+            background: var(--royal-gold);
+            z-index: 1;
+            transform-origin: 0 0;
+        }
+
+        /* Tree Levels */
+        .tree-level {
+            position: absolute;
+            width: 100%;
+        }
+
+        /* BST Info Panel */
+        .bst-info {
+            background: rgba(26, 26, 46, 0.8);
+            padding: 25px;
+            border-radius: 15px;
+            border: 2px solid var(--royal-gold);
+            margin: 30px auto;
+            max-width: 800px;
+        }
+
+        .bst-info h3 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            color: var(--royal-light-gold);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .bst-info p {
+            color: var(--royal-silver);
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        /* Instructions */
+        .instructions {
+            background: rgba(26, 26, 46, 0.8);
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid var(--royal-gold);
+            margin: 20px auto;
+            max-width: 800px;
+            text-align: center;
+        }
+
+        .instructions h3 {
+            font-family: 'Cinzel', serif;
+            color: var(--royal-light-gold);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .instructions p {
+            color: var(--royal-silver);
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .navbar h2 {
+                font-size: 1.8rem;
+            }
+            
+            .btn {
+                min-width: 130px;
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .complexity-box {
+                min-width: 250px;
+            }
+            
+            .popup {
+                min-width: 350px;
+            }
+            
+            .tree-node {
+                width: 55px;
+                height: 55px;
+                font-size: 1.3rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .header h2 {
+                font-size: 1.2rem;
+            }
+            
+            .navbar {
+                padding: 20px;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .tree-node {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+            
+            .complexity-box {
+                min-width: 100%;
+            }
+            
+            .popup {
+                min-width: 90%;
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .navbar h2 {
+                font-size: 1.5rem;
+            }
+            
+            .tree-creation h1 {
+                font-size: 1.6rem;
+            }
+            
+            .tree-node {
+                width: 45px;
+                height: 45px;
+                font-size: 1.1rem;
+            }
+            
+            #valuesInput {
+                padding: 15px;
+                font-size: 1rem;
+            }
+            
+            .complexity-box {
+                padding: 20px;
+            }
+            
+            .complexity-title {
+                font-size: 1.2rem;
+            }
+            
+            .complexity-value {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--royal-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gold-gradient);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(45deg, #F0E68C 0%, #D4AF37 100%);
+        }

@@ -4,182 +4,802 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Divided Layout with Boxes</title>
+    <title>Algorithm Visualizer - Complete</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
     <link rel="stylesheet" href="sortingStylesheet.css">
-
 </head>
 
 <body>
+    
+    <!-- <div class="header">
+        <h1>Algorithm Visualizer</h1>
+    </div> -->
+    
     <div class="left">
-        <!-- Product boxes on the left side -->
-        <div class="product-box" onclick="scrollToRight(1)">
-            <img src="images/bubble_sort.jpg" alt="Product 1">
+        <h3><i class="fas fa-sort-amount-down"></i> Sorting Algorithms</h3>
+        
+        <div class="product-box" onclick="showAlgorithm(1)">
+            <img src="images/bubble_sort.jpg" alt="Bubble Sort">
             <h3>Bubble Sort</h3>
         </div>
-        <div class="product-box" onclick="scrollToRight(2)">
-            <img src="images/selection_sort.jpg" alt="Product 2">
+        <div class="product-box" onclick="showAlgorithm(2)">
+            <img src="images/selection_sort.jpg" alt="Selection Sort">
             <h3>Selection Sort</h3>
         </div>
-        <div class="product-box" onclick="scrollToRight(3)">
-            <img src="images/merge_sort.jpg" alt="Product 3">
+        <div class="product-box" onclick="showAlgorithm(3)">
+            <img src="images/merge_sort.jpg" alt="Merge Sort">
             <h3>Merge Sort</h3>
         </div>
-        <div class="product-box" onclick="scrollToRight(4)">
-            <img src="images/quick_sort.jpg" alt="Product 4">
+        <div class="product-box" onclick="showAlgorithm(4)">
+            <img src="images/quick_sort.jpg" alt="Quick Sort">
             <h3>Quick Sort</h3>
         </div>
-        <div class="product-box" onclick="scrollToRight(5)">
-            <img src="images/insertion_sort.jpg" alt="Product 5">
+        <div class="product-box" onclick="showAlgorithm(5)">
+            <img src="images/insertion_sort.jpg" alt="Insertion Sort">
             <h3>Insertion Sort</h3>
         </div>
     </div>
+    
     <div class="right">
-        <!-- Boxes on the right side -->
-        <div class="top-Text">Click on the Sorting technique you want to learn</div>
-        <div class="right-box" id="right-box-1">
+        <div class="top-Text">
+            <i class="fas fa-hand-pointer"></i> Select a Sorting Algorithm to Visualize & Analyze
+        </div>
+        
+        <!-- Bubble Sort -->
+        <div class="right-box active" id="right-box-1">
             <h2>Bubble Sort</h2>
-            <!-- Time Complexity  -->
-            <div id = "TimeComplexitywc">
-                Time Complexity Of Worst Case: O(n^2)
+            
+            <div class="complexity-container">
+                <div class="complexity-box">
+                    <i class="fas fa-clock"></i>
+                    <div>
+                        <div>Worst Case: O(n²)</div>
+                        <div>Best Case: O(n)</div>
+                    </div>
+                </div>
+                <div class="complexity-box">
+                    <i class="fas fa-memory"></i>
+                    <div>Space Complexity: O(1)</div>
+                </div>
+                <div class="complexity-box">
+                    <i class="fas fa-info-circle"></i>
+                    <div>Stable: Yes</div>
+                </div>
             </div>
-            <div id = "TimeComplexitybc">
-                Time Complexity Of Best Case: O(n)
+            
+            <div class="stats-container">
+                <div class="stat-box">
+                    <div class="stat-value" id="bubble-steps">0</div>
+                    <div class="stat-label">Steps</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="bubble-comparisons">0</div>
+                    <div class="stat-label">Comparisons</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="bubble-swaps">0</div>
+                    <div class="stat-label">Swaps</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="bubble-time">0ms</div>
+                    <div class="stat-label">Time</div>
+                </div>
             </div>
-            <div id = "SpaceComplexity">
-                Space Complexity: O(1)
+            
+            <div class="array-container" id="bubble-array">
+                <!-- Array elements will be generated here -->
             </div>
-
-            <div class="container">
-                <div class="bar-container" id="bubble-sort"></div>
-                <div class="user-input">
-                    <input type="text" id="bubble-user-input-data" placeholder="Enter data separated by commas">
-                    <button onclick="startBubbleSort()">Start Sorting</button>
-                    <button onclick="generateRandomValuesBubble()">Random Value</button> <!-- Add this line -->
-                    <label for="bubble-speed">Animation Speed:</label>
-                    <input type="range" id="bubble-speed" min="100" max="1000" step="100" value="300">
+            
+            <div class="bar-container" id="bubble-bars">
+                <!-- Bars will be generated here -->
+            </div>
+            
+            <div class="controls-container">
+                <div class="input-group">
+                    <input type="text" id="bubble-input" placeholder="Enter numbers separated by commas (e.g., 5,3,8,1,9)" value="5,3,8,1,9,2,7,4,6">
+                </div>
+                <div class="btn-group">
+                    <button class="btn" onclick="startSorting('bubble')">
+                        <i class="fas fa-play"></i> Start Sorting
+                    </button>
+                    <button class="btn btn-secondary" onclick="generateRandom('bubble')">
+                        <i class="fas fa-random"></i> Random Values
+                    </button>
+                    <button class="btn btn-secondary" onclick="resetAlgorithm('bubble')">
+                        <i class="fas fa-redo"></i> Reset
+                    </button>
+                    <button class="btn btn-secondary" id="bubble-pause-btn" onclick="togglePause('bubble')">
+                        <i class="fas fa-pause"></i> Pause
+                    </button>
+                    <button class="btn btn-secondary" onclick="stepForward('bubble')">
+                        <i class="fas fa-step-forward"></i> Step
+                    </button>
+                </div>
+                <div class="speed-control">
+                    <label for="bubble-speed">Speed:</label>
+                    <input type="range" id="bubble-speed" min="50" max="1000" step="50" value="300">
+                </div>
+            </div>
+            
+            <div class="legend-container">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(145deg, var(--royal-accent), #6b4dcc);"></div>
+                    <div>Normal</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(145deg, #ff6b9d, #ff4081);"></div>
+                    <div>Comparing</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(145deg, #c19a6b, #8b4513);"></div>
+                    <div>Swapping</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(145deg, #4CAF50, #2E7D32);"></div>
+                    <div>Sorted</div>
+                </div>
+            </div>
+            
+            <div class="algorithm-container">
+                <div class="algorithm-code">
+                    <h3>Algorithm Code</h3>
+                    <pre id="bubble-code"><code class="language-javascript">function bubbleSort(arr) {
+  let n = arr.length;
+  let swapped;
+  
+  for (let i = 0; i < n - 1; i++) {
+    swapped = false;
+    
+    for (let j = 0; j < n - i - 1; j++) {
+      // Compare adjacent elements
+      if (arr[j] > arr[j + 1]) {
+        // Swap if they are in wrong order
+        [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
+        swapped = true;
+      }
+    }
+    
+    // If no swaps occurred, array is sorted
+    if (!swapped) break;
+  }
+  
+  return arr;
+}</code></pre>
+                </div>
+                <div class="algorithm-explanation">
+                    <h3>How Bubble Sort Works</h3>
+                    <p>Bubble Sort is a simple sorting algorithm that repeatedly steps through the list, compares adjacent elements and swaps them if they are in the wrong order.</p>
+                    <ul>
+                        <li><strong>Pass through array:</strong> Compare each pair of adjacent elements</li>
+                        <li><strong>Swap if needed:</strong> If the first element is greater than the second, swap them</li>
+                        <li><strong>Repeat:</strong> Continue passes until no swaps are needed</li>
+                        <li><strong>Optimization:</strong> After each pass, the largest element bubbles to the end</li>
+                    </ul>
+                    <p><strong>Key Characteristics:</strong></p>
+                    <ul>
+                        <li>In-place algorithm (uses only a constant amount of extra memory)</li>
+                        <li>Stable (preserves order of equal elements)</li>
+                        <li>Time complexity: O(n²) in worst and average cases, O(n) in best case (already sorted)</li>
+                    </ul>
                 </div>
             </div>
         </div>
-
+        
+        <!-- Selection Sort -->
         <div class="right-box" id="right-box-2">
             <h2>Selection Sort</h2>
-           <!-- Time Complexity  -->
-           <div id = "TimeComplexitywc">
-            Time Complexity Of Worst Case: O(n^2)
-        </div>
-        <div id = "TimeComplexitybc">
-            Time Complexity Of Best Case: O(n^2)
-        </div>
-        <div id = "SpaceComplexity">
-            Space Complexity: O(1)
-        </div>
-            <div class="container">
-                <div class="bar-container" id="selection-sort"></div>
-                <div class="user-input">
-                    <input type="text" id="selection-user-input-data" placeholder="Enter data separated by commas">
-                    <button id="start-selection-sort">Start Sorting</button>
-                    <button onclick="generateRandomValuesSelection()">Random Value</button> <!-- Add this line -->
-                    <label for="selection-speed">Animation Speed:</label>
-                    <input type="range" id="selection-speed" min="100" max="1000" step="100" value="300">
+            
+            <div class="complexity-container">
+                <div class="complexity-box">
+                    <i class="fas fa-clock"></i>
+                    <div>
+                        <div>Worst Case: O(n²)</div>
+                        <div>Best Case: O(n²)</div>
+                    </div>
+                </div>
+                <div class="complexity-box">
+                    <i class="fas fa-memory"></i>
+                    <div>Space Complexity: O(1)</div>
+                </div>
+                <div class="complexity-box">
+                    <i class="fas fa-info-circle"></i>
+                    <div>Stable: No</div>
+                </div>
+            </div>
+            
+            <div class="stats-container">
+                <div class="stat-box">
+                    <div class="stat-value" id="selection-steps">0</div>
+                    <div class="stat-label">Steps</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="selection-comparisons">0</div>
+                    <div class="stat-label">Comparisons</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="selection-swaps">0</div>
+                    <div class="stat-label">Swaps</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="selection-time">0ms</div>
+                    <div class="stat-label">Time</div>
+                </div>
+            </div>
+            
+            <div class="array-container" id="selection-array">
+                <!-- Array elements will be generated here -->
+            </div>
+            
+            <div class="bar-container" id="selection-bars">
+                <!-- Bars will be generated here -->
+            </div>
+            
+            <div class="controls-container">
+                <div class="input-group">
+                    <input type="text" id="selection-input" placeholder="Enter numbers separated by commas (e.g., 5,3,8,1,9)" value="9,3,7,1,8,2,5,4,6">
+                </div>
+                <div class="btn-group">
+                    <button class="btn" onclick="startSorting('selection')">
+                        <i class="fas fa-play"></i> Start Sorting
+                    </button>
+                    <button class="btn btn-secondary" onclick="generateRandom('selection')">
+                        <i class="fas fa-random"></i> Random Values
+                    </button>
+                    <button class="btn btn-secondary" onclick="resetAlgorithm('selection')">
+                        <i class="fas fa-redo"></i> Reset
+                    </button>
+                    <button class="btn btn-secondary" id="selection-pause-btn" onclick="togglePause('selection')">
+                        <i class="fas fa-pause"></i> Pause
+                    </button>
+                    <button class="btn btn-secondary" onclick="stepForward('selection')">
+                        <i class="fas fa-step-forward"></i> Step
+                    </button>
+                </div>
+                <div class="speed-control">
+                    <label for="selection-speed">Speed:</label>
+                    <input type="range" id="selection-speed" min="50" max="1000" step="50" value="300">
+                </div>
+            </div>
+            
+            <div class="legend-container">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(145deg, var(--royal-accent), #6b4dcc);"></div>
+                    <div>Normal</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(145deg, #ff6b9d, #ff4081);"></div>
+                    <div>Comparing</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(145deg, #c19a6b, #8b4513);"></div>
+                    <div>Swapping</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(145deg, #4CAF50, #2E7D32);"></div>
+                    <div>Sorted</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(145deg, #2196F3, #0D47A1);"></div>
+                    <div>Current Min</div>
+                </div>
+            </div>
+            
+            <div class="algorithm-container">
+                <div class="algorithm-code">
+                    <h3>Algorithm Code</h3>
+                    <pre id="selection-code"><code class="language-javascript">function selectionSort(arr) {
+  let n = arr.length;
+  
+  for (let i = 0; i < n - 1; i++) {
+    // Find the minimum element in unsorted array
+    let minIdx = i;
+    
+    for (let j = i + 1; j < n; j++) {
+      if (arr[j] < arr[minIdx]) {
+        minIdx = j;
+      }
+    }
+    
+    // Swap the found minimum with the first element
+    if (minIdx !== i) {
+      [arr[i], arr[minIdx]] = [arr[minIdx], arr[i]];
+    }
+  }
+  
+  return arr;
+}</code></pre>
+                </div>
+                <div class="algorithm-explanation">
+                    <h3>How Selection Sort Works</h3>
+                    <p>Selection Sort divides the input list into two parts: a sorted sublist and an unsorted sublist. The algorithm repeatedly finds the minimum element from the unsorted part and moves it to the end of the sorted part.</p>
+                    <ul>
+                        <li><strong>Find minimum:</strong> Scan unsorted portion to find smallest element</li>
+                        <li><strong>Swap:</strong> Swap it with the first unsorted element</li>
+                        <li><strong>Expand sorted portion:</strong> Move boundary between sorted and unsorted one element to the right</li>
+                        <li><strong>Repeat:</strong> Continue until entire array is sorted</li>
+                    </ul>
+                    <p><strong>Key Characteristics:</strong></p>
+                    <ul>
+                        <li>In-place algorithm (uses only a constant amount of extra memory)</li>
+                        <li>Not stable (may change order of equal elements)</li>
+                        <li>Time complexity: Always O(n²) regardless of input order</li>
+                        <li>Makes O(n) swaps (minimum possible)</li>
+                    </ul>
                 </div>
             </div>
         </div>
-
-
+        
+        <!-- Merge Sort -->
         <div class="right-box" id="right-box-3">
             <h2>Merge Sort</h2>
-             <!-- Time Complexity  -->
-           <div id = "TimeComplexitywc">
-            Time Complexity Of Worst Case: O(n log(n))
-        </div>
-        <div id = "TimeComplexitybc">
-            Time Complexity Of Best Case: O(n log(n))
-        </div>
-        <div id = "SpaceComplexity">
-            Space Complexity:O(n)
-        </div>
-            <div class="container">
-                <div class="bar-container" id="merge-sort"></div>
-                <div class="user-input">
-                    <input type="text" id="merge-user-input-data" placeholder="Enter data separated by commas">
-                    <button id="start-merge-sort" onclick="startMergeSort()">Start Sorting</button>
-                    <button onclick="generateRandomValuesMerge()">Random Value</button> <!-- Add this line -->
-                    <label for="merge-speed">Animation Speed:</label>
-                    <input type="range" id="merge-speed" min="100" max="1000" step="100" value="300">
+            
+            <div class="complexity-container">
+                <div class="complexity-box">
+                    <i class="fas fa-clock"></i>
+                    <div>
+                        <div>Worst Case: O(n log n)</div>
+                        <div>Best Case: O(n log n)</div>
+                    </div>
                 </div>
+                <div class="complexity-box">
+                    <i class="fas fa-memory"></i>
+                    <div>Space Complexity: O(n)</div>
+                </div>
+                <div class="complexity-box">
+                    <i class="fas fa-info-circle"></i>
+                    <div>Stable: Yes</div>
+                </div>
+            </div>
+            
+            <div class="stats-container">
+                <div class="stat-box">
+                    <div class="stat-value" id="merge-steps">0</div>
+                    <div class="stat-label">Steps</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="merge-comparisons">0</div>
+                    <div class="stat-label">Comparisons</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="merge-merges">0</div>
+                    <div class="stat-label">Merges</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="merge-time">0ms</div>
+                    <div class="stat-label">Time</div>
+                </div>
+            </div>
+            
+            <div class="array-container" id="merge-array">
+                <!-- Array elements will be generated here -->
+            </div>
+            
+            <div class="bar-container" id="merge-bars">
+                <!-- Bars will be generated here -->
+            </div>
+            
+            <div class="controls-container">
+                <div class="input-group">
+                    <input type="text" id="merge-input" placeholder="Enter numbers separated by commas (e.g., 5,3,8,1,9)" value="6,2,9,1,7,3,8,4,5">
+                </div>
+                <div class="btn-group">
+                    <button class="btn" onclick="startSorting('merge')">
+                        <i class="fas fa-play"></i> Start Sorting
+                    </button>
+                    <button class="btn btn-secondary" onclick="generateRandom('merge')">
+                        <i class="fas fa-random"></i> Random Values
+                    </button>
+                    <button class="btn btn-secondary" onclick="resetAlgorithm('merge')">
+                        <i class="fas fa-redo"></i> Reset
+                    </button>
+                    <button class="btn btn-secondary" id="merge-pause-btn" onclick="togglePause('merge')">
+                        <i class="fas fa-pause"></i> Pause
+                    </button>
+                    <button class="btn btn-secondary" onclick="stepForward('merge')">
+                        <i class="fas fa-step-forward"></i> Step
+                    </button>
+                </div>
+                <div class="speed-control">
+                    <label for="merge-speed">Speed:</label>
+                    <input type="range" id="merge-speed" min="50" max="1000" step="50" value="300">
+                </div>
+            </div>
+            
+            <div class="legend-container">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(145deg, var(--royal-accent), #6b4dcc);"></div>
+                    <div>Normal</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(145deg, #ff6b9d, #ff4081);"></div>
+                    <div>Comparing</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(145deg, #4CAF50, #2E7D32);"></div>
+                    <div>Sorted</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(145deg, #9C27B0, #7B1FA2);"></div>
+                    <div>Left Half</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(145deg, #FF9800, #F57C00);"></div>
+                    <div>Right Half</div>
+                </div>
+            </div>
+            
+            <div class="algorithm-container">
+                <div class="algorithm-code">
+                    <h3>Algorithm Code</h3>
+                    <pre id="merge-code"><code class="language-javascript">function mergeSort(arr, left = 0, right = arr.length - 1) {
+  if (left >= right) return;
+  
+  const mid = Math.floor((left + right) / 2);
+  
+  // Recursively sort both halves
+  mergeSort(arr, left, mid);
+  mergeSort(arr, mid + 1, right);
+  
+  // Merge the sorted halves
+  merge(arr, left, mid, right);
+}
 
-                <div class="color-box">
-                    <div class="color-indicator" style="background-color:brown;"></div>
-                    <div class="color-label">Swapping</div>
-                    <div class="color-indicator" style="background-color: pink;"></div>
-                    <div class="color-label">Comparing</div>
+function merge(arr, left, mid, right) {
+  const leftArr = arr.slice(left, mid + 1);
+  const rightArr = arr.slice(mid + 1, right + 1);
+  
+  let i = 0, j = 0, k = left;
+  
+  while (i < leftArr.length && j < rightArr.length) {
+    if (leftArr[i] <= rightArr[j]) {
+      arr[k] = leftArr[i];
+      i++;
+    } else {
+      arr[k] = rightArr[j];
+      j++;
+    }
+    k++;
+  }
+  
+  // Copy remaining elements
+  while (i < leftArr.length) {
+    arr[k] = leftArr[i];
+    i++;
+    k++;
+  }
+  
+  while (j < rightArr.length) {
+    arr[k] = rightArr[j];
+    j++;
+    k++;
+  }
+}</code></pre>
+                </div>
+                <div class="algorithm-explanation">
+                    <h3>How Merge Sort Works</h3>
+                    <p>Merge Sort is a divide-and-conquer algorithm that divides the input array into two halves, recursively sorts each half, and then merges the sorted halves.</p>
+                    <ul>
+                        <li><strong>Divide:</strong> Split the array into two halves</li>
+                        <li><strong>Conquer:</strong> Recursively sort each half</li>
+                        <li><strong>Combine:</strong> Merge the two sorted halves</li>
+                        <li><strong>Base case:</strong> Array of size 1 is already sorted</li>
+                    </ul>
+                    <p><strong>Key Characteristics:</strong></p>
+                    <ul>
+                        <li>Not in-place (requires O(n) additional memory)</li>
+                        <li>Stable (preserves order of equal elements)</li>
+                        <li>Time complexity: Always O(n log n) regardless of input</li>
+                        <li>Well-suited for large datasets and external sorting</li>
+                    </ul>
                 </div>
             </div>
         </div>
-
-
-
-
-
-
-
+        
+        <!-- Quick Sort -->
         <div class="right-box" id="right-box-4">
             <h2>Quick Sort</h2>
-               <!-- Time Complexity  -->
-           <div id = "TimeComplexitywc">
-            Time Complexity Of Worst Case: O(n log(n))
-        </div>
-        <div id = "TimeComplexitybc">
-            Time Complexity Of Best Case: O(n log(n))
-        </div>
-        <div id = "SpaceComplexity">
-            Space Complexity:O(n)
-        </div>
-            <div class="container">
-                <div class="bar-container" id="quick-sort"></div>
-                <div class="user-input">
-                    <input type="text" id="quick-user-input-data" placeholder="Enter data separated by commas">
-                    <button id="start-quick-sort">Start Sorting</button>
-                    <button onclick="generateRandomValuesQuick()">Random Value</button> <!-- Add this line -->
-                    <label for="quick-speed">Animation Speed:</label>
-                    <input type="range" id="quick-speed" min="100" max="1000" step="100" value="300">
+            
+            <div class="complexity-container">
+                <div class="complexity-box">
+                    <i class="fas fa-clock"></i>
+                    <div>
+                        <div>Worst Case: O(n²)</div>
+                        <div>Best Case: O(n log n)</div>
+                    </div>
+                </div>
+                <div class="complexity-box">
+                    <i class="fas fa-memory"></i>
+                    <div>Space Complexity: O(log n)</div>
+                </div>
+                <div class="complexity-box">
+                    <i class="fas fa-info-circle"></i>
+                    <div>Stable: No</div>
+                </div>
+            </div>
+            
+            <div class="stats-container">
+                <div class="stat-box">
+                    <div class="stat-value" id="quick-steps">0</div>
+                    <div class="stat-label">Steps</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="quick-comparisons">0</div>
+                    <div class="stat-label">Comparisons</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="quick-swaps">0</div>
+                    <div class="stat-label">Swaps</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="quick-time">0ms</div>
+                    <div class="stat-label">Time</div>
+                </div>
+            </div>
+            
+            <div class="array-container" id="quick-array">
+                <!-- Array elements will be generated here -->
+            </div>
+            
+            <div class="bar-container" id="quick-bars">
+                <!-- Bars will be generated here -->
+            </div>
+            
+            <div class="controls-container">
+                <div class="input-group">
+                    <input type="text" id="quick-input" placeholder="Enter numbers separated by commas (e.g., 5,3,8,1,9)" value="8,3,7,1,9,2,6,4,5">
+                </div>
+                <div class="btn-group">
+                    <button class="btn" onclick="startSorting('quick')">
+                        <i class="fas fa-play"></i> Start Sorting
+                    </button>
+                    <button class="btn btn-secondary" onclick="generateRandom('quick')">
+                        <i class="fas fa-random"></i> Random Values
+                    </button>
+                    <button class="btn btn-secondary" onclick="resetAlgorithm('quick')">
+                        <i class="fas fa-redo"></i> Reset
+                    </button>
+                    <button class="btn btn-secondary" id="quick-pause-btn" onclick="togglePause('quick')">
+                        <i class="fas fa-pause"></i> Pause
+                    </button>
+                    <button class="btn btn-secondary" onclick="stepForward('quick')">
+                        <i class="fas fa-step-forward"></i> Step
+                    </button>
+                </div>
+                <div class="speed-control">
+                    <label for="quick-speed">Speed:</label>
+                    <input type="range" id="quick-speed" min="50" max="1000" step="50" value="300">
+                </div>
+            </div>
+            
+            <div class="legend-container">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(145deg, var(--royal-accent), #6b4dcc);"></div>
+                    <div>Normal</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(145deg, #ff6b9d, #ff4081);"></div>
+                    <div>Comparing</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(145deg, #c19a6b, #8b4513);"></div>
+                    <div>Swapping</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(145deg, #FF9800, #F57C00);"></div>
+                    <div>Pivot</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(145deg, #9C27B0, #7B1FA2);"></div>
+                    <div>Left Partition</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(145deg, #2196F3, #0D47A1);"></div>
+                    <div>Right Partition</div>
+                </div>
+            </div>
+            
+            <div class="algorithm-container">
+                <div class="algorithm-code">
+                    <h3>Algorithm Code</h3>
+                    <pre id="quick-code"><code class="language-javascript">function quickSort(arr, low = 0, high = arr.length - 1) {
+  if (low < high) {
+    // Partition the array and get pivot index
+    const pi = partition(arr, low, high);
+    
+    // Recursively sort elements before and after partition
+    quickSort(arr, low, pi - 1);
+    quickSort(arr, pi + 1, high);
+  }
+}
+
+function partition(arr, low, high) {
+  // Choose rightmost element as pivot
+  const pivot = arr[high];
+  
+  // Index of smaller element
+  let i = low - 1;
+  
+  for (let j = low; j < high; j++) {
+    // If current element is smaller than pivot
+    if (arr[j] < pivot) {
+      i++;
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+  }
+  
+  // Swap pivot to correct position
+  [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]];
+  
+  return i + 1;
+}</code></pre>
+                </div>
+                <div class="algorithm-explanation">
+                    <h3>How Quick Sort Works</h3>
+                    <p>Quick Sort is a divide-and-conquer algorithm that selects a 'pivot' element and partitions the array around the pivot, placing smaller elements to the left and larger elements to the right.</p>
+                    <ul>
+                        <li><strong>Choose pivot:</strong> Select an element as pivot (here: last element)</li>
+                        <li><strong>Partition:</strong> Rearrange array so elements < pivot go left, > pivot go right</li>
+                        <li><strong>Recurse:</strong> Recursively apply to left and right subarrays</li>
+                        <li><strong>Combine:</strong> No need to combine as array is sorted in place</li>
+                    </ul>
+                    <p><strong>Key Characteristics:</strong></p>
+                    <ul>
+                        <li>In-place algorithm (uses only O(log n) additional memory for recursion)</li>
+                        <li>Not stable (may change order of equal elements)</li>
+                        <li>Time complexity: O(n log n) average case, O(n²) worst case (already sorted)</li>
+                        <li>Often faster in practice than other O(n log n) algorithms</li>
+                    </ul>
                 </div>
             </div>
         </div>
-
-
-
-
-
-
-
+        
+        <!-- Insertion Sort -->
         <div class="right-box" id="right-box-5">
             <h2>Insertion Sort</h2>
-               <!-- Time Complexity  -->
-           <div id = "TimeComplexitywc">
-            Time Complexity Of Worst Case: O(n log(n))
-        </div>
-        <div id = "TimeComplexitybc">
-            Time Complexity Of Best Case: O(n log(n))
-        </div>
-        <div id = "SpaceComplexity">
-            Space Complexity:O(n)
-        </div>
-            <div class="container">
-                <div class="bar-container" id="insertion-sort"></div>
-                <div class="user-input">
-                    <input type="text" id="insertion-user-input-data" placeholder="Enter data separated by commas">
-                    <button id="start-insertion-sort">Start Sorting</button>
-                    <button onclick="generateRandomValuesInsertion()">Random Value</button> <!-- Add this line -->
-                    <label for="insertion-speed">Animation Speed:</label>
-                    <input type="range" id="insertion-speed" min="100" max="1000" step="100" value="300">
+            
+            <div class="complexity-container">
+                <div class="complexity-box">
+                    <i class="fas fa-clock"></i>
+                    <div>
+                        <div>Worst Case: O(n²)</div>
+                        <div>Best Case: O(n)</div>
+                    </div>
+                </div>
+                <div class="complexity-box">
+                    <i class="fas fa-memory"></i>
+                    <div>Space Complexity: O(1)</div>
+                </div>
+                <div class="complexity-box">
+                    <i class="fas fa-info-circle"></i>
+                    <div>Stable: Yes</div>
+                </div>
+            </div>
+            
+            <div class="stats-container">
+                <div class="stat-box">
+                    <div class="stat-value" id="insertion-steps">0</div>
+                    <div class="stat-label">Steps</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="insertion-comparisons">0</div>
+                    <div class="stat-label">Comparisons</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="insertion-swaps">0</div>
+                    <div class="stat-label">Swaps</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="insertion-time">0ms</div>
+                    <div class="stat-label">Time</div>
+                </div>
+            </div>
+            
+            <div class="array-container" id="insertion-array">
+                <!-- Array elements will be generated here -->
+            </div>
+            
+            <div class="bar-container" id="insertion-bars">
+                <!-- Bars will be generated here -->
+            </div>
+            
+            <div class="controls-container">
+                <div class="input-group">
+                    <input type="text" id="insertion-input" placeholder="Enter numbers separated by commas (e.g., 5,3,8,1,9)" value="7,2,8,1,9,3,6,4,5">
+                </div>
+                <div class="btn-group">
+                    <button class="btn" onclick="startSorting('insertion')">
+                        <i class="fas fa-play"></i> Start Sorting
+                    </button>
+                    <button class="btn btn-secondary" onclick="generateRandom('insertion')">
+                        <i class="fas fa-random"></i> Random Values
+                    </button>
+                    <button class="btn btn-secondary" onclick="resetAlgorithm('insertion')">
+                        <i class="fas fa-redo"></i> Reset
+                    </button>
+                    <button class="btn btn-secondary" id="insertion-pause-btn" onclick="togglePause('insertion')">
+                        <i class="fas fa-pause"></i> Pause
+                    </button>
+                    <button class="btn btn-secondary" onclick="stepForward('insertion')">
+                        <i class="fas fa-step-forward"></i> Step
+                    </button>
+                </div>
+                <div class="speed-control">
+                    <label for="insertion-speed">Speed:</label>
+                    <input type="range" id="insertion-speed" min="50" max="1000" step="50" value="300">
+                </div>
+            </div>
+            
+            <div class="legend-container">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(145deg, var(--royal-accent), #6b4dcc);"></div>
+                    <div>Normal</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(145deg, #ff6b9d, #ff4081);"></div>
+                    <div>Comparing</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(145deg, #c19a6b, #8b4513);"></div>
+                    <div>Swapping</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(145deg, #4CAF50, #2E7D32);"></div>
+                    <div>Sorted</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(145deg, #2196F3, #0D47A1);"></div>
+                    <div>Current Element</div>
+                </div>
+            </div>
+            
+            <div class="algorithm-container">
+                <div class="algorithm-code">
+                    <h3>Algorithm Code</h3>
+                    <pre id="insertion-code"><code class="language-javascript">function insertionSort(arr) {
+  let n = arr.length;
+  
+  for (let i = 1; i < n; i++) {
+    // Element to be inserted
+    let key = arr[i];
+    let j = i - 1;
+    
+    // Move elements greater than key one position ahead
+    while (j >= 0 && arr[j] > key) {
+      arr[j + 1] = arr[j];
+      j--;
+    }
+    
+    // Insert key at correct position
+    arr[j + 1] = key;
+  }
+  
+  return arr;
+}</code></pre>
+                </div>
+                <div class="algorithm-explanation">
+                    <h3>How Insertion Sort Works</h3>
+                    <p>Insertion Sort builds the final sorted array one element at a time by repeatedly taking the next element and inserting it into its correct position in the already sorted part.</p>
+                    <ul>
+                        <li><strong>Start with first element:</strong> Consider it already sorted</li>
+                        <li><strong>Take next element:</strong> Insert it into correct position in sorted portion</li>
+                        <li><strong>Shift elements:</strong> Move larger elements one position to the right</li>
+                        <li><strong>Repeat:</strong> Continue until all elements are inserted</li>
+                    </ul>
+                    <p><strong>Key Characteristics:</strong></p>
+                    <ul>
+                        <li>In-place algorithm (uses only a constant amount of extra memory)</li>
+                        <li>Stable (preserves order of equal elements)</li>
+                        <li>Time complexity: O(n²) in worst and average cases, O(n) in best case (already sorted)</li>
+                        <li>Efficient for small datasets or nearly sorted data</li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="sortingScript.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+   <script src="sortingScript.js"></script>
 </body>
 
 </html>

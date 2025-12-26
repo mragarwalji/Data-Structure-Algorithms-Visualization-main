@@ -1,647 +1,841 @@
-function scrollToRight(boxNumber) {
-    const rightBox = document.getElementById(`right-box-${boxNumber}`);
-    rightBox.scrollIntoView({ behavior: 'smooth' });
-}
+// Global state for each algorithm
+        const algorithmStates = {
+            bubble: {
+                data: [5, 3, 8, 1, 9, 2, 7, 4, 6],
+                steps: 0,
+                comparisons: 0,
+                swaps: 0,
+                startTime: 0,
+                isSorting: false,
+                isPaused: false,
+                timeoutId: null,
+                currentStep: null
+            },
+            selection: {
+                data: [9, 3, 7, 1, 8, 2, 5, 4, 6],
+                steps: 0,
+                comparisons: 0,
+                swaps: 0,
+                startTime: 0,
+                isSorting: false,
+                isPaused: false,
+                timeoutId: null,
+                currentStep: null
+            },
+            merge: {
+                data: [6, 2, 9, 1, 7, 3, 8, 4, 5],
+                steps: 0,
+                comparisons: 0,
+                merges: 0,
+                startTime: 0,
+                isSorting: false,
+                isPaused: false,
+                timeoutId: null,
+                currentStep: null
+            },
+            quick: {
+                data: [8, 3, 7, 1, 9, 2, 6, 4, 5],
+                steps: 0,
+                comparisons: 0,
+                swaps: 0,
+                startTime: 0,
+                isSorting: false,
+                isPaused: false,
+                timeoutId: null,
+                currentStep: null
+            },
+            insertion: {
+                data: [7, 2, 8, 1, 9, 3, 6, 4, 5],
+                steps: 0,
+                comparisons: 0,
+                swaps: 0,
+                startTime: 0,
+                isSorting: false,
+                isPaused: false,
+                timeoutId: null,
+                currentStep: null
+            }
+        };
 
+        // Function to show selected algorithm
+        function showAlgorithm(algorithmId) {
+            // Hide all algorithm boxes
+            document.querySelectorAll('.right-box').forEach(box => {
+                box.classList.remove('active');
+            });
+            
+            // Show the selected algorithm box
+            document.getElementById(`right-box-${algorithmId}`).classList.add('active');
+            
+            // Generate visualization for the selected algorithm
+            const algorithmNames = ['bubble', 'selection', 'merge', 'quick', 'insertion'];
+            const algorithmName = algorithmNames[algorithmId - 1];
+            generateVisualization(algorithmName);
+        }
 
-// Helper function to sleep for a given time
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
+        // Function to generate visualization
+        function generateVisualization(algorithm) {
+            const state = algorithmStates[algorithm];
+            
+            // Update array visualization
+            updateArrayVisualization(algorithm, state.data);
+            
+            // Update bar visualization
+            updateBarVisualization(algorithm, state.data);
+            
+            // Update stats
+            updateStats(algorithm);
+        }
 
-// Helper function to parse user input into an array for Bubble sort
-function parseUserInput(input) {
-    const values = input.split(',').map(item => parseInt(item.trim(), 10));
-    const validValues = values.filter(item => !isNaN(item) && item <= 100);
-    if (values.length !== validValues.length) {
-        alert('Please enter values between 1 and 100 only.');
-    }
-    return validValues;
-}
+        // Function to update array visualization
+        function updateArrayVisualization(algorithm, data, highlights = {}) {
+            const container = document.getElementById(`${algorithm}-array`);
+            container.innerHTML = '';
+            
+            const maxValue = Math.max(...data);
+            
+            data.forEach((value, index) => {
+                const element = document.createElement('div');
+                element.className = 'array-element';
+                element.textContent = value;
+                
+                // Apply highlights
+                if (highlights.comparing && highlights.comparing.includes(index)) {
+                    element.classList.add('comparing');
+                }
+                if (highlights.swapping && highlights.swapping.includes(index)) {
+                    element.classList.add('swapping');
+                }
+                if (highlights.sorted && highlights.sorted.includes(index)) {
+                    element.classList.add('sorted');
+                }
+                if (highlights.pivot && highlights.pivot === index) {
+                    element.classList.add('pivot');
+                }
+                if (highlights.current && highlights.current === index) {
+                    element.classList.add('current');
+                }
+                
+                container.appendChild(element);
+            });
+        }
 
+        // Function to update bar visualization
+        function updateBarVisualization(algorithm, data, highlights = {}) {
+            const container = document.getElementById(`${algorithm}-bars`);
+            container.innerHTML = '';
+            
+            const maxValue = Math.max(...data);
+            
+            data.forEach((value, index) => {
+                const barHeight = (value / maxValue) * 100;
+                const bar = document.createElement('div');
+                bar.className = 'bar';
+                bar.style.height = `${barHeight}%`;
+                bar.innerHTML = `<div class="bar-value">${value}</div>`;
+                
+                // Apply highlights
+                if (highlights.comparing && highlights.comparing.includes(index)) {
+                    bar.classList.add('comparing');
+                }
+                if (highlights.swapping && highlights.swapping.includes(index)) {
+                    bar.classList.add('swapping');
+                }
+                if (highlights.sorted && highlights.sorted.includes(index)) {
+                    bar.classList.add('sorted');
+                }
+                if (highlights.pivot && highlights.pivot === index) {
+                    bar.classList.add('pivot');
+                }
+                if (highlights.current && highlights.current === index) {
+                    bar.classList.add('current');
+                }
+                
+                container.appendChild(bar);
+            });
+        }
 
-function generateRandomValuesBubble() {
-    const userInputData = document.getElementById("bubble-user-input-data");
-    const minValue = 1; // Minimum value for the random data
-    const maxValue = 100; // Maximum value for the random data
-    const numValues = 10; // Number of values to generate
-
-    const randomValues = Array.from({ length: numValues }, () => Math.floor(Math.random() * (maxValue - minValue + 1)) + minValue);
-
-    userInputData.value = randomValues.join(",");
-}
-
-// Repeat the above function for other sorting techniques as needed
-
-function generateRandomValuesSelection() {
-    const userInputData = document.getElementById("selection-user-input-data");
-    const minValue = 1; // Minimum value for the random data
-    const maxValue = 100; // Maximum value for the random data
-    const numValues = 10; // Number of values to generate
-
-    const randomValues = Array.from({ length: numValues }, () => Math.floor(Math.random() * (maxValue - minValue + 1)) + minValue);
-
-    userInputData.value = randomValues.join(",");
-}
-
-
-function generateRandomValuesMerge() {
-    const userInputData = document.getElementById("merge-user-input-data");
-    const minValue = 1; // Minimum value for the random data
-    const maxValue = 100; // Maximum value for the random data
-    const numValues = 10; // Number of values to generate
-
-    const randomValues = Array.from({ length: numValues }, () => Math.floor(Math.random() * (maxValue - minValue + 1)) + minValue);
-
-    userInputData.value = randomValues.join(",");
-}
-
-function generateRandomValuesQuick() {
-    const userInputData = document.getElementById("quick-user-input-data");
-    const minValue = 1; // Minimum value for the random data
-    const maxValue = 100; // Maximum value for the random data
-    const numValues = 10; // Number of values to generate
-
-    const randomValues = Array.from({ length: numValues }, () => Math.floor(Math.random() * (maxValue - minValue + 1)) + minValue);
-
-    userInputData.value = randomValues.join(",");
-}
-
-
-function generateRandomValuesInsertion() {
-    const userInputData = document.getElementById("insertion-user-input-data");
-    const minValue = 1; // Minimum value for the random data
-    const maxValue = 100; // Maximum value for the random data
-    const numValues = 10; // Number of values to generate
-
-    const randomValues = Array.from({ length: numValues }, () => Math.floor(Math.random() * (maxValue - minValue + 1)) + minValue);
-
-    userInputData.value = randomValues.join(",");
-}
-
-
-
-//BUBBLE SORT
-
-// Helper function to generate random values for Bubble sort
-function generateRandomBubbleSortValues(size) {
-    const array = [];
-    for (let i = 0; i < size; i++) {
-        array.push(Math.floor(Math.random() * 100) + 1);
-    }
-    return array;
-}
-
-
-// Helper function to visualize the array elements as bars for Bubble sort
-function visualizeBubbleSortBars(containerId, array, currentIndex = -1, compareIndex = -1) {
-    const barContainer = document.getElementById(containerId);
-    barContainer.innerHTML = array.map((num, index) => {
-        const heightStyle = `height: ${num * 2.5}px;`;
-        const colorStyle = index === currentIndex || index === compareIndex
-            ? 'background-color: #f59d9d;'                                      //comparision
-            : 'background-color: #9ddf7e;';
-        return `<div class="bar" style="${heightStyle} ${colorStyle}">
-            <span class="bar-label">${num}</span>
-        </div>`;
-    }).join("");
-}
-
-// Helper function to swap two elements in the array and visualize the process
-async function swapBubble(array, i, j, animationSpeed) {
-    const temp = array[i];
-    array[i] = array[j];
-    array[j] = temp;
-    visualizeBubbleSortBars("bubble-sort", array, i, j);
-    await sleep(animationSpeed * 2);
-}
-
-// Bubble Sort
-async function bubbleSort(array, animationSpeed) {
-    const n = array.length;
-    let swapped;
-
-    do {
-        swapped = false;
-        for (let i = 0; i < n - 1; i++) {
-            if (array[i] > array[i + 1]) {
-                // Highlight the compared bars in red
-                visualizeBubbleSortBars("bubble-sort", array, i, i + 1);
-                await sleep(animationSpeed * 2);
-
-                // Swap the elements
-                await swapBubble(array, i, i + 1, animationSpeed);
-
-                // Revert the color to default
-                visualizeBubbleSortBars("bubble-sort", array);
-                await sleep(animationSpeed);
-
-                swapped = true;
+        // Function to update stats
+        function updateStats(algorithm) {
+            const state = algorithmStates[algorithm];
+            
+            // Update step count
+            document.getElementById(`${algorithm}-steps`).textContent = state.steps;
+            
+            // Update comparisons
+            if (algorithm === 'merge') {
+                document.getElementById(`${algorithm}-comparisons`).textContent = state.comparisons;
+                document.getElementById(`${algorithm}-merges`).textContent = state.merges;
+            } else {
+                document.getElementById(`${algorithm}-comparisons`).textContent = state.comparisons;
+                document.getElementById(`${algorithm}-swaps`).textContent = state.swaps;
+            }
+            
+            // Update time if sorting has started
+            if (state.startTime > 0) {
+                const elapsed = Date.now() - state.startTime;
+                document.getElementById(`${algorithm}-time`).textContent = `${elapsed}ms`;
             }
         }
-    } while (swapped);
 
-    // Final visualization with all bars in default color after sorting finishes
-    visualizeBubbleSortBars("bubble-sort", array);
-}
+        // Function to generate random values
+        function generateRandom(algorithm) {
+            const state = algorithmStates[algorithm];
+            
+            // Generate 9 random numbers between 1 and 100
+            state.data = Array.from({length: 9}, () => Math.floor(Math.random() * 100) + 1);
+            
+            // Reset stats
+            resetStats(algorithm);
+            
+            // Update input field
+            document.getElementById(`${algorithm}-input`).value = state.data.join(',');
+            
+            // Generate visualization
+            generateVisualization(algorithm);
+        }
 
-// Flag to track if sorting is in progress
-let sortingInProgress = false;
-let initialArray = generateRandomBubbleSortValues(10); // Store the initial array separately
-
-// Function to start the Bubble Sort process
-async function startBubbleSort() {
-    // If sorting is already in progress, return and do not start another sorting process
-    if (sortingInProgress) {
-        return;
-    }
-
-    // Set the flag to indicate that sorting is in progress
-    sortingInProgress = true;
-
-    const userInput = document.getElementById("bubble-user-input-data").value;
-    const userInputArray = userInput ? parseUserInput(userInput) : initialArray; // Use the initial array if user input is empty
-    const animationSpeed = document.getElementById("bubble-speed").value;
-    visualizeBubbleSortBars("bubble-sort", userInputArray); // Show the user input array instead of the initial array
-
-    try {
-        await bubbleSort(userInputArray, animationSpeed);
-    } finally {
-        // Reset the flag after sorting is complete
-        sortingInProgress = false;
-    }
-}
-
-// Call the event listeners to start the sorting algorithms by default
-document.addEventListener("DOMContentLoaded", function () {
-    visualizeBubbleSortBars("bubble-sort", initialArray); // Show the initial array on page load
-});
-
-
-
-
-
-
-
-// Helper function to generate random values for Selection Sort
-function generateRandomSelectionSortValues(size) {
-    const array = [];
-    for (let i = 0; i < size; i++) {
-        array.push(Math.floor(Math.random() * 100) + 1);
-    }
-    return array;
-}
-
-// Helper function to visualize the array elements as bars for Selection Sort
-function visualizeSelectionSortBars(array, currentIndex = -1, compareIndex = -1) {
-    const barContainer = document.getElementById("selection-sort");
-    barContainer.innerHTML = array.map((num, index) => {
-        const heightStyle = `height: ${num * 2.5}px;`;
-        const colorStyle = index === currentIndex || index === compareIndex
-            ? 'background-color: #f59d9d;'
-            : 'background-color: #9ddf7e;';
-        return `<div class="bar" style="${heightStyle} ${colorStyle}">
-            <span class="bar-label">${num}</span>
-        </div>`;
-    }).join("");
-}
-
-// Helper function to swap two elements in the array and visualize the process
-async function swapSelection(array, i, j, animationSpeed) {
-    const temp = array[i];
-    array[i] = array[j];
-    array[j] = temp;
-    visualizeSelectionSortBars(array, i, j);
-    await sleep(animationSpeed * 2);
-}
-
-// Selection Sort
-async function selectionSort(array, animationSpeed) {
-    const n = array.length;
-    for (let i = 0; i < n - 1; i++) {
-        let minIndex = i;
-        for (let j = i + 1; j < n; j++) {
-            // Highlight the compared bars in red
-            visualizeSelectionSortBars(array, i, j);
-            await sleep(animationSpeed * 2);
-
-            if (array[j] < array[minIndex]) {
-                minIndex = j;
+        // Function to reset algorithm
+        function resetAlgorithm(algorithm) {
+            const state = algorithmStates[algorithm];
+            
+            // Reset data to default
+            const defaultData = {
+                bubble: [5, 3, 8, 1, 9, 2, 7, 4, 6],
+                selection: [9, 3, 7, 1, 8, 2, 5, 4, 6],
+                merge: [6, 2, 9, 1, 7, 3, 8, 4, 5],
+                quick: [8, 3, 7, 1, 9, 2, 6, 4, 5],
+                insertion: [7, 2, 8, 1, 9, 3, 6, 4, 5]
+            };
+            
+            state.data = [...defaultData[algorithm]];
+            
+            // Reset stats
+            resetStats(algorithm);
+            
+            // Update input field
+            document.getElementById(`${algorithm}-input`).value = state.data.join(',');
+            
+            // Stop any ongoing sorting
+            if (state.timeoutId) {
+                clearTimeout(state.timeoutId);
+                state.timeoutId = null;
             }
-
-            // Revert the color to default
-            visualizeSelectionSortBars(array);
-            await sleep(animationSpeed);
+            
+            state.isSorting = false;
+            state.isPaused = false;
+            
+            // Update pause button
+            const pauseBtn = document.getElementById(`${algorithm}-pause-btn`);
+            pauseBtn.innerHTML = '<i class="fas fa-pause"></i> Pause';
+            
+            // Generate visualization
+            generateVisualization(algorithm);
         }
 
-        if (minIndex !== i) {
-            // Swap the elements
-            await swapSelection(array, i, minIndex, animationSpeed);
-        }
-    }
-
-    // Final visualization with all bars in default color after sorting finishes
-    visualizeSelectionSortBars(array);
-}
-
-// Flag to track if Selection Sort is in progress
-let selectionSortInProgress = false;
-let initialSelectionSortArray = generateRandomSelectionSortValues(10); // Store the initial array separately for Selection Sort
-
-// Function to start the Selection Sort process
-async function startSelectionSort() {
-    // If Selection Sort is already in progress, return and do not start another sorting process
-    if (selectionSortInProgress) {
-        return;
-    }
-
-    // Set the flag to indicate that Selection Sort is in progress
-    selectionSortInProgress = true;
-
-    const userInput = document.getElementById("selection-user-input-data").value;
-    const userInputArray = userInput ? parseUserInput(userInput) : initialSelectionSortArray; // Use the initial array if user input is empty
-    const animationSpeed = document.getElementById("selection-speed").value;
-    visualizeSelectionSortBars(userInputArray); // Show the user input array instead of the initial array
-
-    try {
-        await selectionSort(userInputArray, animationSpeed);
-    } finally {
-        // Reset the flag after Selection Sort is complete
-        selectionSortInProgress = false;
-    }
-}
-
-// Call the event listener to start the Selection Sort algorithm when the page is fully loaded
-document.addEventListener("DOMContentLoaded", function () {
-    visualizeSelectionSortBars(initialSelectionSortArray); // Show the initial array on page load for Selection Sort
-    document.getElementById("start-selection-sort").addEventListener("click", startSelectionSort);
-});
-
-
-
-
-
-
-
-
-
-
-// Helper function to generate random values for Merge Sort
-function generateRandomMergeSortValues(size) {
-    const array = [];
-    for (let i = 0; i < size; i++) {
-        array.push(Math.floor(Math.random() * 100) + 1);
-    }
-    return array;
-}
-
-
-
-// Helper function to visualize the array elements as bars for Merge Sort
-function visualizeMergeSortBars(array, partitions, comparisons) {
-    const barContainer = document.getElementById("merge-sort");
-    barContainer.innerHTML = array.map((num, index) => {
-        let colorStyle = `background-color: #9ddf7e;`; // Light green for sorting
-        if (comparisons[index]) {
-            colorStyle = 'background-color: pink;'; // Light orange for compared bars
-        } else if (partitions[index] !== undefined) {
-            colorStyle = 'background-color: brown;'; // Light yellow for swapped bars
-        }
-        return `<div class="bar" style="height: ${num * 2.5}px; ${colorStyle}">
-                <span class="bar-label">${num}</span>
-            </div>`;
-    }).join("");
-}
-
-
-
-// Updated helper function to visualize the array elements during divide and conquer
-async function visualizeDivideAndConquer(array, left, right, animationSpeed) {
-    // Select the bars within the divide-and-conquer range
-    for (let i = left; i <= right; i++) {
-        visualizeMergeSortBars(array, left, right, i);
-        await sleep(animationSpeed);
-    }
-
-    // Revert the color to default for the selected bars
-    visualizeMergeSortBars(array);
-}
-
-// Updated merge function used in Merge Sort to visualize the merge process
-async function merge(array, left, middle, right, animationSpeed, partitions, comparisons) {
-    const leftArray = array.slice(left, middle + 1);
-    const rightArray = array.slice(middle + 1, right + 1);
-    let i = 0;
-    let j = 0;
-    let k = left;
-
-    while (i < leftArray.length && j < rightArray.length) {
-        // Highlight the compared bars on the side
-        visualizeDivideAndConquer(array, left + i, right - (rightArray.length - 1 - j), animationSpeed * 2);
-        comparisons[left + i] = true;
-        comparisons[right - (rightArray.length - 1 - j)] = true;
-
-        if (leftArray[i] <= rightArray[j]) {
-            array[k] = leftArray[i];
-            i++;
-        } else {
-            array[k] = rightArray[j];
-            j++;
-        }
-        k++;
-
-        // Revert the color to default
-        visualizeMergeSortBars(array, partitions, comparisons);
-        await sleep(animationSpeed);
-        comparisons[left + i] = false;
-        comparisons[right - (rightArray.length - 1 - j)] = false;
-    }
-
-    while (i < leftArray.length) {
-        array[k] = leftArray[i];
-        i++;
-        k++;
-
-        // Revert the color to default
-        visualizeMergeSortBars(array, partitions, comparisons);
-        await sleep(animationSpeed);
-    }
-
-    while (j < rightArray.length) {
-        array[k] = rightArray[j];
-        j++;
-        k++;
-
-        // Revert the color to default
-        visualizeMergeSortBars(array, partitions, comparisons);
-        await sleep(animationSpeed);
-    }
-}
-
-// Merge Sort
-async function mergeSort(array, left, right, animationSpeed, partitions, comparisons) {
-    if (left >= right) {
-        return;
-    }
-
-    const middle = Math.floor((left + right) / 2);
-
-    partitions[middle] = partitions[left] === undefined ? 1 : partitions[left] + 1;
-    await mergeSort(array, left, middle, animationSpeed, partitions, comparisons);
-    partitions[middle] = undefined;
-
-    partitions[right] = partitions[middle + 1] === undefined ? 1 : partitions[middle + 1] + 1;
-    await mergeSort(array, middle + 1, right, animationSpeed, partitions, comparisons);
-    partitions[right] = undefined;
-
-    await merge(array, left, middle, right, animationSpeed, partitions, comparisons);
-}
-
-// Flag to track if Merge Sort is in progress
-let mergeSortInProgress = false;
-let initialMergeSortArray = generateRandomMergeSortValues(10); // Store the initial array separately for Merge Sort
-
-// Function to start the Merge Sort process
-async function startMergeSort() {
-    // If Merge Sort is already in progress, return and do not start another sorting process
-    if (mergeSortInProgress) {
-        return;
-    }
-
-    // Disable the "Start Sorting" button while sorting is in progress
-    document.getElementById("start-merge-sort").disabled = true;
-
-    // Set the flag to indicate that Merge Sort is in progress
-    mergeSortInProgress = true;
-
-    const userInput = document.getElementById("merge-user-input-data").value;
-    const userInputArray = userInput ? parseUserInput(userInput) : initialMergeSortArray; // Use the initial array if user input is empty
-    const animationSpeed = document.getElementById("merge-speed").value;
-    visualizeMergeSortBars(userInputArray, [], []); // Show the user input array instead of the initial array
-
-    try {
-        await mergeSort(userInputArray, 0, userInputArray.length - 1, animationSpeed, [], []);
-    } finally {
-        // Reset the flag after Merge Sort is complete
-        mergeSortInProgress = false;
-        document.getElementById("start-merge-sort").disabled = false;
-        // Mark sorted bars in dark green after sorting is complete
-        visualizeMergeSortBars(userInputArray, [], Array.from({ length: userInputArray.length }, (_, index) => index));
-    }
-}
-
-// Call the event listener to start the Merge Sort algorithm when the page is fully loaded
-document.addEventListener("DOMContentLoaded", function () {
-    visualizeMergeSortBars(initialMergeSortArray, [], []); // Show the initial array on page load for Merge Sort
-    document.getElementById("start-merge-sort").addEventListener("click", startMergeSort);
-});
-
-
-
-
-
-
-// Helper function to generate random values for Quick Sort
-function generateRandomQuickSortValues(size) {
-    const array = [];
-    for (let i = 0; i < size; i++) {
-        array.push(Math.floor(Math.random() * 100) + 1);
-    }
-    return array;
-}
-
-
-
-// Helper function to visualize the array elements as bars for Quick Sort
-function visualizeQuickSortBars(array, pivotIndex, currentIndex = -1, compareIndex = -1) {
-    const barContainer = document.getElementById("quick-sort");
-    barContainer.innerHTML = array.map((num, index) => {
-        const heightStyle = `height: ${num * 2.5}px;`;
-        let colorStyle = 'background-color: #9ddf7e;';
-
-        if (index === currentIndex) {
-            colorStyle = 'background-color: #ff0000;';
-        } else if (index === pivotIndex) {
-            colorStyle = 'background-color: #ffd700;';
-        } else if (index === compareIndex) {
-            colorStyle = 'background-color: #ff4500;';
+        // Function to reset stats
+        function resetStats(algorithm) {
+            const state = algorithmStates[algorithm];
+            
+            state.steps = 0;
+            state.comparisons = 0;
+            state.swaps = 0;
+            state.merges = 0;
+            state.startTime = 0;
+            
+            updateStats(algorithm);
         }
 
-        return `<div class="bar" style="${heightStyle} ${colorStyle}">
-              <span class="bar-label">${num}</span>
-          </div>`;
-    }).join("");
-}
-
-
-
-// Helper function to swap two elements in the array and visualize the process
-async function swapQuick(array, i, j, animationSpeed) {
-    const temp = array[i];
-    array[i] = array[j];
-    array[j] = temp;
-    visualizeQuickSortBars(array, -1, i, j);
-    await sleep(animationSpeed * 2);
-    visualizeQuickSortBars(array, -1);
-}
-
-
-
-// Quick Sort
-
-
-async function quickSort(array, left, right, animationSpeed) {
-    if (left < right) {
-        const pivotIndex = await partition(array, left, right, animationSpeed);
-        await quickSort(array, left, pivotIndex - 1, animationSpeed);
-        await quickSort(array, pivotIndex + 1, right, animationSpeed);
-    }
-}
-
-async function partition(array, left, right, animationSpeed) {
-    const pivot = array[right];
-    let i = left - 1;
-
-    for (let j = left; j < right; j++) {
-        if (array[j] < pivot) {
-            i++;
-            await swapQuick(array, i, j, animationSpeed);
-        }
-    }
-
-    await swapQuick(array, i + 1, right, animationSpeed);
-    return i + 1;
-}
-
-
-
-
-// Flag to track if quick Sort is in progress
-let quickSortInProgress = false;
-let initialQuickSortArray = generateRandomQuickSortValues(10); // Store the initial array separately for Merge Sort
-
-
-// Function to start the Quick Sort process
-async function startQuickSort() {
-    if (quickSortInProgress) {
-        return;
-    }
-
-
-    // Disable the "Start Sorting" button while sorting is in progress
-    document.getElementById("start-quick-sort").disabled = true;
-
-    // Set the flag to indicate that Quick Sort is in progress
-    quickSortingInProgress = true;
-
-    const userInput = document.getElementById("quick-user-input-data").value;
-    const userInputArray = userInput ? parseUserInput(userInput) : initialQuickSortArray.slice();
-    const animationSpeed = parseInt(document.getElementById("quick-speed").value, 10);
-    visualizeQuickSortBars(userInputArray, -1);
-
-    try {
-        await quickSort(userInputArray, 0, userInputArray.length - 1, animationSpeed);
-    } finally {
-        // Reset the flag after Merge Sort is complete
-        quickSortInProgress = false;
-        document.getElementById("start-quick-sort").disabled = false;
-
-    }
-}
-
-// Call the event listener to start the Quick Sort algorithm when the page is fully loaded
-document.addEventListener("DOMContentLoaded", function () {
-    visualizeQuickSortBars(initialQuickSortArray, -1);
-    document.getElementById("start-quick-sort").addEventListener("click", startQuickSort);
-});
-
-
-
-
-// Helper function to generate random values for Insertion Sort
-function generateRandomInsertionSortValues(size) {
-    const array = [];
-    for (let i = 0; i < size; i++) {
-        array.push(Math.floor(Math.random() * 100) + 1);
-    }
-    return array;
-}
-
-// Helper function to visualize the array elements as bars for Insertion Sort
-function visualizeInsertionSortBars(array, currentIndex = -1, compareIndex = -1) {
-    const barContainer = document.getElementById("insertion-sort");
-    barContainer.innerHTML = array.map((num, index) => {
-        const heightStyle = `height: ${num * 2.5}px;`;
-        const colorStyle = index === currentIndex || index === compareIndex
-            ? 'background-color: #f59d9d;'
-            : 'background-color: #9ddf7e;';
-        return `<div class="bar" style="${heightStyle} ${colorStyle}">
-            <span class="bar-label">${num}</span>
-        </div>`;
-    }).join("");
-}
-
-
-// Insertion Sort
-async function insertionSort(array, animationSpeed) {
-    const n = array.length;
-    for (let i = 1; i < n; i++) {
-        const key = array[i];
-        let j = i - 1;
-
-        // Highlight the compared bars in red
-        visualizeInsertionSortBars(array, i, j);
-        await sleep(animationSpeed * 2);
-
-        while (j >= 0 && array[j] > key) {
-            array[j + 1] = array[j];
-            j--;
-
-            // Visualize the process
-            visualizeInsertionSortBars(array, i, j);
-            await sleep(animationSpeed);
+        // Function to start sorting
+        function startSorting(algorithm) {
+            const state = algorithmStates[algorithm];
+            
+            // If already sorting, do nothing
+            if (state.isSorting) return;
+            
+            // Get data from input field
+            const inputField = document.getElementById(`${algorithm}-input`);
+            let data = inputField.value;
+            
+            // If input is empty, use the default data
+            if (!data.trim()) {
+                data = state.data.join(',');
+                inputField.value = data;
+            }
+            
+            // Convert string to array of numbers
+            const dataArray = data.split(',').map(num => parseInt(num.trim())).filter(num => !isNaN(num));
+            
+            if (dataArray.length === 0) {
+                alert('Please enter valid numbers separated by commas.');
+                return;
+            }
+            
+            // Update the algorithm data
+            state.data = dataArray;
+            
+            // Reset stats
+            state.steps = 0;
+            state.comparisons = 0;
+            state.swaps = 0;
+            state.merges = 0;
+            state.startTime = Date.now();
+            
+            // Set sorting state
+            state.isSorting = true;
+            state.isPaused = false;
+            
+            // Update pause button
+            const pauseBtn = document.getElementById(`${algorithm}-pause-btn`);
+            pauseBtn.innerHTML = '<i class="fas fa-pause"></i> Pause';
+            
+            // Generate initial visualization
+            generateVisualization(algorithm);
+            
+            // Start the appropriate sorting algorithm
+            if (algorithm === 'bubble') {
+                bubbleSortStep(state);
+            } else if (algorithm === 'selection') {
+                selectionSortStep(state);
+            } else if (algorithm === 'merge') {
+                mergeSortStep(state);
+            } else if (algorithm === 'quick') {
+                quickSortStep(state);
+            } else if (algorithm === 'insertion') {
+                insertionSortStep(state);
+            }
         }
 
-        array[j + 1] = key;
+        // Function to toggle pause
+        function togglePause(algorithm) {
+            const state = algorithmStates[algorithm];
+            const pauseBtn = document.getElementById(`${algorithm}-pause-btn`);
+            
+            if (!state.isSorting) return;
+            
+            state.isPaused = !state.isPaused;
+            
+            if (state.isPaused) {
+                pauseBtn.innerHTML = '<i class="fas fa-play"></i> Resume';
+            } else {
+                pauseBtn.innerHTML = '<i class="fas fa-pause"></i> Pause';
+                
+                // Resume sorting
+                if (algorithm === 'bubble') {
+                    bubbleSortStep(state);
+                } else if (algorithm === 'selection') {
+                    selectionSortStep(state);
+                } else if (algorithm === 'merge') {
+                    mergeSortStep(state);
+                } else if (algorithm === 'quick') {
+                    quickSortStep(state);
+                } else if (algorithm === 'insertion') {
+                    insertionSortStep(state);
+                }
+            }
+        }
 
-        // Revert the color to default
-        visualizeInsertionSortBars(array);
-        await sleep(animationSpeed);
-    }
+        // Function to step forward
+        function stepForward(algorithm) {
+            const state = algorithmStates[algorithm];
+            
+            if (!state.isSorting || !state.isPaused) return;
+            
+            // Execute one step
+            if (state.currentStep) {
+                state.currentStep();
+            }
+        }
 
-    // Final visualization with all bars in default color after sorting finishes
-    visualizeInsertionSortBars(array);
-}
+        // Bubble Sort implementation
+        function bubbleSortStep(state) {
+            const data = state.data;
+            const n = data.length;
+            let i = state.currentStep?.i || 0;
+            let j = state.currentStep?.j || 0;
+            let swapped = state.currentStep?.swapped || false;
+            
+            // If we're starting fresh
+            if (!state.currentStep) {
+                i = 0;
+                j = 0;
+                swapped = false;
+            }
+            
+            // Define the step function
+            const step = () => {
+                // Update step count
+                state.steps++;
+                
+                // If we've completed a pass
+                if (j >= n - i - 1) {
+                    // If no swaps occurred, array is sorted
+                    if (!swapped || i >= n - 1) {
+                        state.isSorting = false;
+                        state.currentStep = null;
+                        
+                        // Mark all elements as sorted
+                        updateArrayVisualization('bubble', data, { sorted: Array.from({length: n}, (_, idx) => idx) });
+                        updateBarVisualization('bubble', data, { sorted: Array.from({length: n}, (_, idx) => idx) });
+                        updateStats('bubble');
+                        return;
+                    }
+                    
+                    // Start next pass
+                    i++;
+                    j = 0;
+                    swapped = false;
+                }
+                
+                // Highlight comparing elements
+                updateArrayVisualization('bubble', data, { comparing: [j, j + 1] });
+                updateBarVisualization('bubble', data, { comparing: [j, j + 1] });
+                
+                // Update comparison count
+                state.comparisons++;
+                
+                // Check if we need to swap
+                if (data[j] > data[j + 1]) {
+                    // Swap elements
+                    [data[j], data[j + 1]] = [data[j + 1], data[j]];
+                    state.swaps++;
+                    
+                    // Highlight swapping
+                    updateArrayVisualization('bubble', data, { swapping: [j, j + 1] });
+                    updateBarVisualization('bubble', data, { swapping: [j, j + 1] });
+                    
+                    swapped = true;
+                }
+                
+                // Move to next comparison
+                j++;
+                
+                // Save current step state
+                state.currentStep = { i, j, swapped };
+                
+                // Update stats
+                updateStats('bubble');
+                
+                // Schedule next step if not paused
+                if (state.isSorting && !state.isPaused) {
+                    const speed = parseInt(document.getElementById('bubble-speed').value);
+                    state.timeoutId = setTimeout(step, speed);
+                }
+            };
+            
+            // Start the step
+            step();
+        }
 
-// Flag to track if Insertion Sort is in progress
-let insertionSortInProgress = false;
-let initialInsertionSortArray = generateRandomInsertionSortValues(10); // Store the initial array separately for Insertion Sort
+        // Selection Sort implementation
+        function selectionSortStep(state) {
+            const data = state.data;
+            const n = data.length;
+            let i = state.currentStep?.i || 0;
+            let j = state.currentStep?.j || i + 1;
+            let minIdx = state.currentStep?.minIdx || i;
+            
+            // Define the step function
+            const step = () => {
+                // Update step count
+                state.steps++;
+                
+                // If we've completed finding the min for this i
+                if (j >= n) {
+                    // Swap if needed
+                    if (minIdx !== i) {
+                        [data[i], data[minIdx]] = [data[minIdx], data[i]];
+                        state.swaps++;
+                        
+                        // Highlight swap
+                        updateArrayVisualization('selection', data, { swapping: [i, minIdx], sorted: Array.from({length: i + 1}, (_, idx) => idx) });
+                        updateBarVisualization('selection', data, { swapping: [i, minIdx], sorted: Array.from({length: i + 1}, (_, idx) => idx) });
+                    } else {
+                        // Mark as sorted
+                        updateArrayVisualization('selection', data, { sorted: Array.from({length: i + 1}, (_, idx) => idx) });
+                        updateBarVisualization('selection', data, { sorted: Array.from({length: i + 1}, (_, idx) => idx) });
+                    }
+                    
+                    // Move to next i
+                    i++;
+                    
+                    // Check if sorting is complete
+                    if (i >= n - 1) {
+                        state.isSorting = false;
+                        state.currentStep = null;
+                        
+                        // Mark all elements as sorted
+                        updateArrayVisualization('selection', data, { sorted: Array.from({length: n}, (_, idx) => idx) });
+                        updateBarVisualization('selection', data, { sorted: Array.from({length: n}, (_, idx) => idx) });
+                        updateStats('selection');
+                        return;
+                    }
+                    
+                    // Reset for next iteration
+                    j = i + 1;
+                    minIdx = i;
+                } else {
+                    // Compare current element with min
+                    state.comparisons++;
+                    
+                    // Highlight comparing elements
+                    updateArrayVisualization('selection', data, { 
+                        comparing: [j, minIdx],
+                        current: minIdx,
+                        sorted: Array.from({length: i}, (_, idx) => idx)
+                    });
+                    updateBarVisualization('selection', data, { 
+                        comparing: [j, minIdx],
+                        current: minIdx,
+                        sorted: Array.from({length: i}, (_, idx) => idx)
+                    });
+                    
+                    // Update min index if current element is smaller
+                    if (data[j] < data[minIdx]) {
+                        minIdx = j;
+                    }
+                    
+                    // Move to next element
+                    j++;
+                }
+                
+                // Save current step state
+                state.currentStep = { i, j, minIdx };
+                
+                // Update stats
+                updateStats('selection');
+                
+                // Schedule next step if not paused
+                if (state.isSorting && !state.isPaused) {
+                    const speed = parseInt(document.getElementById('selection-speed').value);
+                    state.timeoutId = setTimeout(step, speed);
+                }
+            };
+            
+            // Start the step
+            step();
+        }
 
-// Function to start the Insertion Sort process
-async function startInsertionSort() {
-    // If Insertion Sort is already in progress, return and do not start another sorting process
-    if (insertionSortInProgress) {
-        return;
-    }
+        // Merge Sort implementation (simplified step-by-step)
+        function mergeSortStep(state) {
+            // For simplicity, we'll show a simplified version
+            const data = state.data;
+            const n = data.length;
+            
+            // Mark all elements as being processed
+            updateArrayVisualization('merge', data, { comparing: Array.from({length: n}, (_, idx) => idx) });
+            updateBarVisualization('merge', data, { comparing: Array.from({length: n}, (_, idx) => idx) });
+            
+            // Simulate merge sort with delays
+            simulateMergeSort(state, 0, n - 1);
+        }
 
-    // Set the flag to indicate that Insertion Sort is in progress
-    insertionSortInProgress = true;
+        function simulateMergeSort(state, left, right) {
+            if (left >= right) return;
+            
+            const mid = Math.floor((left + right) / 2);
+            
+            // Recursively sort left and right halves
+            setTimeout(() => {
+                // Highlight left half
+                const leftIndices = Array.from({length: mid - left + 1}, (_, idx) => left + idx);
+                updateArrayVisualization('merge', state.data, { comparing: leftIndices });
+                updateBarVisualization('merge', state.data, { comparing: leftIndices });
+                state.steps++;
+                updateStats('merge');
+                
+                simulateMergeSort(state, left, mid);
+            }, 500);
+            
+            setTimeout(() => {
+                // Highlight right half
+                const rightIndices = Array.from({length: right - mid}, (_, idx) => mid + 1 + idx);
+                updateArrayVisualization('merge', state.data, { comparing: rightIndices });
+                updateBarVisualization('merge', state.data, { comparing: rightIndices });
+                state.steps++;
+                updateStats('merge');
+                
+                simulateMergeSort(state, mid + 1, right);
+            }, 1000);
+            
+            // Merge the halves
+            setTimeout(() => {
+                merge(state, left, mid, right);
+            }, 1500);
+        }
 
-    const userInput = document.getElementById("insertion-user-input-data").value;
-    const userInputArray = userInput ? parseUserInput(userInput) : initialInsertionSortArray.slice();
-    const animationSpeed = parseInt(document.getElementById("insertion-speed").value, 10);
-    visualizeInsertionSortBars(userInputArray); // Show the user input array instead of the initial array
+        function merge(state, left, mid, right) {
+            const leftArr = state.data.slice(left, mid + 1);
+            const rightArr = state.data.slice(mid + 1, right + 1);
+            
+            let i = 0, j = 0, k = left;
+            
+            const mergeStep = () => {
+                if (i < leftArr.length && j < rightArr.length) {
+                    state.comparisons++;
+                    state.steps++;
+                    
+                    // Highlight elements being compared
+                    updateArrayVisualization('merge', state.data, { 
+                        comparing: [left + i, mid + 1 + j]
+                    });
+                    updateBarVisualization('merge', state.data, { 
+                        comparing: [left + i, mid + 1 + j]
+                    });
+                    
+                    if (leftArr[i] <= rightArr[j]) {
+                        state.data[k] = leftArr[i];
+                        i++;
+                    } else {
+                        state.data[k] = rightArr[j];
+                        j++;
+                    }
+                    k++;
+                    
+                    updateStats('merge');
+                    
+                    // Continue merging
+                    setTimeout(mergeStep, 300);
+                } else {
+                    // Copy remaining elements
+                    while (i < leftArr.length) {
+                        state.data[k] = leftArr[i];
+                        i++;
+                        k++;
+                        state.steps++;
+                        updateStats('merge');
+                    }
+                    
+                    while (j < rightArr.length) {
+                        state.data[k] = rightArr[j];
+                        j++;
+                        k++;
+                        state.steps++;
+                        updateStats('merge');
+                    }
+                    
+                    state.merges++;
+                    
+                    // Highlight merged section as sorted
+                    const sortedIndices = Array.from({length: right - left + 1}, (_, idx) => left + idx);
+                    updateArrayVisualization('merge', state.data, { sorted: sortedIndices });
+                    updateBarVisualization('merge', state.data, { sorted: sortedIndices });
+                    
+                    // Check if sorting is complete
+                    if (left === 0 && right === state.data.length - 1) {
+                        state.isSorting = false;
+                        state.currentStep = null;
+                    }
+                }
+            };
+            
+            mergeStep();
+        }
 
-    try {
-        await insertionSort(userInputArray, animationSpeed);
-    } finally {
-        // Reset the flag after Insertion Sort is complete
-        insertionSortInProgress = false;
-    }
-}
+        // Quick Sort implementation (simplified step-by-step)
+        function quickSortStep(state) {
+            // Start quick sort
+            quickSortRecursive(state, 0, state.data.length - 1);
+        }
 
-// Call the event listener to start the Insertion Sort algorithm when the page is fully loaded
-document.addEventListener("DOMContentLoaded", function () {
-    visualizeInsertionSortBars(initialInsertionSortArray); // Show the initial array on page load for Insertion Sort
-    document.getElementById("start-insertion-sort").addEventListener("click", startInsertionSort);
-});
+        function quickSortRecursive(state, low, high) {
+            if (low < high) {
+                // Partition the array
+                partitionStep(state, low, high, (pivotIndex) => {
+                    // Recursively sort left and right partitions
+                    quickSortRecursive(state, low, pivotIndex - 1);
+                    quickSortRecursive(state, pivotIndex + 1, high);
+                    
+                    // Check if sorting is complete
+                    if (low === 0 && high === state.data.length - 1) {
+                        state.isSorting = false;
+                        state.currentStep = null;
+                        
+                        // Mark all elements as sorted
+                        updateArrayVisualization('quick', state.data, { sorted: Array.from({length: state.data.length}, (_, idx) => idx) });
+                        updateBarVisualization('quick', state.data, { sorted: Array.from({length: state.data.length}, (_, idx) => idx) });
+                    }
+                });
+            }
+        }
+
+        function partitionStep(state, low, high, callback) {
+            const pivot = state.data[high];
+            let i = low - 1;
+            let j = low;
+            
+            const step = () => {
+                if (j <= high - 1) {
+                    state.steps++;
+                    state.comparisons++;
+                    
+                    // Highlight comparing elements
+                    updateArrayVisualization('quick', state.data, { 
+                        comparing: [j, high],
+                        pivot: high
+                    });
+                    updateBarVisualization('quick', state.data, { 
+                        comparing: [j, high],
+                        pivot: high
+                    });
+                    
+                    if (state.data[j] < pivot) {
+                        i++;
+                        
+                        // Swap elements
+                        [state.data[i], state.data[j]] = [state.data[j], state.data[i]];
+                        state.swaps++;
+                        
+                        // Highlight swap
+                        updateArrayVisualization('quick', state.data, { 
+                            swapping: [i, j],
+                            pivot: high
+                        });
+                        updateBarVisualization('quick', state.data, { 
+                            swapping: [i, j],
+                            pivot: high
+                        });
+                    }
+                    
+                    j++;
+                    updateStats('quick');
+                    
+                    // Schedule next step
+                    if (state.isSorting && !state.isPaused) {
+                        const speed = parseInt(document.getElementById('quick-speed').value);
+                        state.timeoutId = setTimeout(step, speed);
+                    } else {
+                        state.currentStep = step;
+                    }
+                } else {
+                    // Place pivot in correct position
+                    [state.data[i + 1], state.data[high]] = [state.data[high], state.data[i + 1]];
+                    state.swaps++;
+                    
+                    // Highlight final pivot placement
+                    updateArrayVisualization('quick', state.data, { 
+                        swapping: [i + 1, high],
+                        pivot: i + 1
+                    });
+                    updateBarVisualization('quick', state.data, { 
+                        swapping: [i + 1, high],
+                        pivot: i + 1
+                    });
+                    
+                    updateStats('quick');
+                    
+                    // Callback with pivot index
+                    callback(i + 1);
+                }
+            };
+            
+            step();
+        }
+
+        // Insertion Sort implementation
+        function insertionSortStep(state) {
+            const data = state.data;
+            const n = data.length;
+            let i = state.currentStep?.i || 1;
+            let j = state.currentStep?.j || i - 1;
+            let key = state.currentStep?.key || data[i];
+            
+            // Define the step function
+            const step = () => {
+                // Update step count
+                state.steps++;
+                
+                // If we're starting a new element
+                if (j === i - 1) {
+                    key = data[i];
+                    
+                    // Highlight current element
+                    updateArrayVisualization('insertion', data, { 
+                        current: i,
+                        sorted: Array.from({length: i}, (_, idx) => idx)
+                    });
+                    updateBarVisualization('insertion', data, { 
+                        current: i,
+                        sorted: Array.from({length: i}, (_, idx) => idx)
+                    });
+                }
+                
+                // Check if we need to shift
+                if (j >= 0 && data[j] > key) {
+                    state.comparisons++;
+                    
+                    // Shift element to the right
+                    data[j + 1] = data[j];
+                    state.swaps++;
+                    
+                    // Highlight shift
+                    updateArrayVisualization('insertion', data, { 
+                        comparing: [j, j + 1],
+                        current: i,
+                        sorted: Array.from({length: i}, (_, idx) => idx)
+                    });
+                    updateBarVisualization('insertion', data, { 
+                        comparing: [j, j + 1],
+                        current: i,
+                        sorted: Array.from({length: i}, (_, idx) => idx)
+                    });
+                    
+                    j--;
+                } else {
+                    // Insert key at correct position
+                    data[j + 1] = key;
+                    
+                    // Mark as sorted up to i
+                    updateArrayVisualization('insertion', data, { 
+                        sorted: Array.from({length: i + 1}, (_, idx) => idx)
+                    });
+                    updateBarVisualization('insertion', data, { 
+                        sorted: Array.from({length: i + 1}, (_, idx) => idx)
+                    });
+                    
+                    // Move to next element
+                    i++;
+                    
+                    // Check if sorting is complete
+                    if (i >= n) {
+                        state.isSorting = false;
+                        state.currentStep = null;
+                        
+                        // Mark all elements as sorted
+                        updateArrayVisualization('insertion', data, { sorted: Array.from({length: n}, (_, idx) => idx) });
+                        updateBarVisualization('insertion', data, { sorted: Array.from({length: n}, (_, idx) => idx) });
+                        updateStats('insertion');
+                        return;
+                    }
+                    
+                    // Reset for next element
+                    j = i - 1;
+                }
+                
+                // Save current step state
+                state.currentStep = { i, j, key };
+                
+                // Update stats
+                updateStats('insertion');
+                
+                // Schedule next step if not paused
+                if (state.isSorting && !state.isPaused) {
+                    const speed = parseInt(document.getElementById('insertion-speed').value);
+                    state.timeoutId = setTimeout(step, speed);
+                }
+            };
+            
+            // Start the step
+            step();
+        }
+
+        // Initialize the page
+        window.onload = function() {
+            // Generate visualizations for all algorithms
+            for (const algorithm in algorithmStates) {
+                generateVisualization(algorithm);
+            }
+            
+            // Highlight code
+            Prism.highlightAll();
+        };

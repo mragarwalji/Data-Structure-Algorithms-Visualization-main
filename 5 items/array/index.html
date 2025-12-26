@@ -4,32 +4,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Array Operations Visualization</title>
-<link rel="stylesheet" href="styles.css">
+    <title>Royal Array Operations</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+   <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
+    <!-- Background decoration -->
+    <div class="bg-decoration"></div>
 
-    <header>
-        <h1 class="title">Array Operations Visualization</h1>
+    <!-- Header -->
+    <header class="royal-header">
+        <h1 class="title">Array Operations</h1>
+        <p class="subtitle">Visualize array insertions, updates, and deletions with elegance</p>
     </header>
 
+    <!-- Main container -->
     <div id="container">
+        <!-- Corner decorations -->
+        <div class="corner-decor tl"></div>
+        <div class="corner-decor tr"></div>
+        <div class="corner-decor bl"></div>
+        <div class="corner-decor br"></div>
 
+        <!-- Array container -->
         <div id="array-container" class="arr-ele">
+            <div class="array-empty-message" id="empty-message">
+                <i class="fas fa-gem"></i><br>
+                Array is empty. Generate random array or insert values to begin.
+            </div>
             <!-- Array elements will be displayed here -->
         </div>
 
+        <!-- Controls container -->
         <div class="container-footer">
-            <input type="number" id="value-input" placeholder="Value">
-            <input type="number" id="index-input" placeholder="Index">
-            <button id="insert-button">Insert</button>
-            <button id="update-button">Update</button>
-            <button id="delete-button">Delete</button>
-            <button id="random-generate-button">Generate Random Array</button>
+            <input type="number" id="value-input" class="royal-input" placeholder="Enter value">
+            <input type="number" id="index-input" class="royal-input" placeholder="Enter index (optional)">
+            <button id="insert-button" class="royal-button">
+                <i class="fas fa-plus-circle"></i> Insert
+            </button>
+            <button id="update-button" class="royal-button">
+                <i class="fas fa-edit"></i> Update
+            </button>
+            <button id="delete-button" class="royal-button">
+                <i class="fas fa-trash-alt"></i> Delete
+            </button>
+            <button id="random-generate-button" class="royal-button">
+                <i class="fas fa-random"></i> Generate Random Array
+            </button>
         </div>
 
+        <!-- Stats panel -->
+        <div class="stats-panel">
+            <div class="stat-box">
+                <div class="stat-value" id="array-size">0</div>
+                <div class="stat-label">Array Size</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="array-max">0</div>
+                <div class="stat-label">Maximum Value</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="array-min">0</div>
+                <div class="stat-label">Minimum Value</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="array-sum">0</div>
+                <div class="stat-label">Sum of Values</div>
+            </div>
+        </div>
     </div>
+
+    <!-- Instructions -->
+    <div class="instructions">
+        <h3><i class="fas fa-scroll"></i> Array Instructions</h3>
+        <p>Welcome to the Array Visualizer! Here's how to use this majestic tool:</p>
+        <ul>
+            <li><strong>Insert:</strong> Enter a value and optionally an index to insert at a specific position. If no index is provided, the value will be appended to the end.</li>
+            <li><strong>Update:</strong> Enter both a value and index to update the element at that position.</li>
+            <li><strong>Delete:</strong> Enter an index to delete the element at that position.</li>
+            <li><strong>Generate Random Array:</strong> Creates a new array with random values between 1 and 100.</li>
+        </ul>
+        <p>Each operation will be visualized with animations. Hover over array elements to see their details.</p>
+    </div>
+
+    <!-- Footer -->
+    <div class="royal-footer">
+        <p>Array Visualizer &copy; 2025 | Data Structures</p>
+        <p>May your arrays be efficient and your indices be within bounds</p>
+    </div>
+
+   <script src="script.js"></script>
 </body>
-<script src="script.js"></script>
 </html>
